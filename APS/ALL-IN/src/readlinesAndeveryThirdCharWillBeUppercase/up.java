@@ -155,7 +155,7 @@ class DLL<E> {
 
 public class up {
 
-    // h e l l o e r o l l b a b a   -> h e L l o E r o L l
+    // h e l l o e r o l l     -> h e L l o E r o L l
     private static void zadaca(DLL<String> lista){
 
         DLLNode<String> current=lista.getFirst();
