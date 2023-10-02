@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OnlineClasses</title>
+
+  <style>
+
+
+
+    #main h2:nth-child(1){
+
+      text-align: center;
+    }
+
+    #grid{
+      width: 350px ;
+      height: 200px;
+    }
+
+
+    .a{
+      display: grid;
+      grid-template-columns: 40% 60%;
+      padding-bottom:10px;
+    }
+
+
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      text-align: center;
+      border: 1px black solid;
+    }
+
+    th, td {
+      border: 1px black solid;
+    }
+
+  </style>
+
+
+  <script>
+    var countTeachers=0;
+    var usedUsernames = new Set();
+
+
+    function addUser(){
+      var name=document.getElementById("name")
+      var email=document.getElementById("email")
+      var age=document.getElementById("age")
+      var username=document.getElementById("username")
+      var psw=document.getElementById("psw")
+     var role=document.getElementById("role")
+
+
+      if(name.value=="" || email.value=="" || age.value=="" || username.value=="" || psw.value=="" || role.value==""){
+        alert("PLEASE FILL ALL")
+        return ;
+      }
+
+
+      if (usedUsernames.has(username.value)) {
+        alert("USERNAME IS ALREADY USED");
+        return;
+      }
+
+      // let array=document.getElementsByClassName("row")
+      // console.log(array)
+      // for(i=0;i<array.length ;i++){
+      //   if(array[i].children[1].innerHTML == username.value){
+      //     alert("USERNAME IS ALREADY USED")
+      //     return ;
+      //   }
+      // }
+
+
+      if (!isValidPsw(psw.value)) {
+        alert("PSW IS NOT VALID")
+        return;
+      }
+
+      var where=document.getElementById("addHere")
+      var what=document.createElement("tr")
+      what.setAttribute("class","row")
+
+
+      if (role.value === "teacher") {
+        what.innerHTML = "<td>" + name.value + "</td>" +
+                "<td>" + username.value + "</td>" +
+                "<td>" + email.value + "</td>" +
+                "<td>" + age.value + "</td>" +
+                "<td>" + role.value + "</td>" +
+                "<td><button onclick='hire(this)'>Hire</button></td>"
+      } else {
+        what.innerHTML = "<td>" + name.value + "</td>" +
+                "<td>" + username.value + "</td>" +
+                "<td>" + email.value + "</td>" +
+                "<td>" + age.value + "</td>" +
+                "<td>" + role.value + "</td>"
+      }
+
+      if(role.value==="teacher")
+      {
+        if(age.value<18)
+        {
+          alert("Cant have teacher younger than 18!")
+          return;
+        }
+      }
+
+      if(role.value === "teacher"){
+        what.style.backgroundColor="green"
+      }else{
+        what.style.backgroundColor = "lightblue"
+      }
+
+      where.append(what)
+
+      usedUsernames.add(username.value);
+
+
+      name.value = ""
+      email.value = ""
+      role.value = ""
+      username.value = ""
+      psw.value = ""
+      age.value =""
+
+      function isValidPsw(password) {
+        if (password.length < 10) {
+          return false;
+        }
+
+        let hasUpperCase = false;
+        let hasNumber = false;
+
+        for (let i = 0; i < password.length; i++) {
+          const char = password.charAt(i);
+
+          if (char === char.toUpperCase() && isNaN(char)) {
+            hasUpperCase = true;
+          } else if (!isNaN(char)) {
+            hasNumber = true;
+          }
+        }
+
+        return hasUpperCase && hasNumber;
+      }
+
+
+    }
+
+
+    function hire(btn){
+      let row=btn.parentNode.parentNode
+      row.style.backgroundColor="gray"
+      btn.remove()
+      let content=document.getElementById("teachersCount")
+      content.innerHTML=++countTeachers;
+    }
+
+  </script>
+
+</head>
+<body>
+<div id="main">
+ <h2>Online classes</h2>
+  <div id="innerMain">
+    <div id="grid">
+      <div class="a">
+        <label>Name and surname</label>
+        <input type="text" id="name">
+      </div>
+
+      <div class="a">
+        <label>Email</label>
+        <input type="text" id="email">
+      </div>
+
+      <div class="a">
+        <label>Age</label>
+        <input type="text" id="age">
+      </div>
+      <div class="a">
+        <label>Username</label>
+        <input type="text" id="username">
+      </div>
+      <div class="a">
+        <label>Password</label>
+        <input type="text" id="psw">
+      </div>
+      <div class="a">
+        <label>Role</label>
+        <select  id="role">
+          <option></option>
+          <option >teacher</option>
+          <option >student</option>
+        </select>
+      </div>
+    </div>
+
+     <div >
+     <button onclick="addUser()">Add</button>
+    </div>
+     <div >
+     <p> Available teachers: <span id="teachersCount">0</span></p>
+    </div>
+  </div>
+
+
+  <div id="task">
+    <h3>Users</h3>
+
+    <div>
+
+      <table>
+
+        <thead>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Role</th>
+        <th>Actions</th>
+        </thead>
+
+        <tbody id="addHere">
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

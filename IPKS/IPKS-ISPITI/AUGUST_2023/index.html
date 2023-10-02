@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+<style>
+    .a{
+        display: grid;
+        width: 250px;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 5px;
+
+    }
+</style>
+<body>
+
+<div id="createTable">
+
+</div>
+
+<div id="infoPart">
+
+</div>
+<button onclick="addRow()">ADD</button><button onclick="exportTOJSON()">EXPORT TO JSON</button>
+
+
+<script>
+  var givenJSON = '[{ "name": "John", "surname": "Doe", "age": 30, "email": "john@example.com", "color": "Blue" }, ' +
+                   '{ "name": "Alice", "surname": "Smith", "age": 25, "email": "alice@example.com", "color": "Red" },' +
+                   '{ "name": "Bob", "surname": "Johnson", "age": 35, "email": "bob@example.com", "color": "Green" }]';
+
+  var parsedJ=JSON.parse(givenJSON);
+
+
+
+  var placeToCreateTable=document.getElementById("createTable");
+  var divInput=document.createElement("div")
+  var tbodi=document.createElement("tbody");
+
+  // divInput.setAttribute("class","a")
+
+  var infoParti=document.getElementById("infoPart")
+
+
+  window.onload= ( ()=> {
+      loadFROMJSON()
+      generateInputsForUser()
+  })
+
+
+
+
+  function loadFROMJSON(){
+      let mainTable = document.createElement("table")
+      let tr1 = document.createElement("tr")
+      let theadi = document.createElement("thead")
+
+
+      for (const key of Object.keys(parsedJ[0])) { //creating th
+          let th1 = document.createElement("th")
+          th1.textContent=key
+          tr1.appendChild(th1);
+      }
+      theadi.appendChild(tr1)
+      mainTable.appendChild(theadi)
+      placeToCreateTable.appendChild(mainTable);
+
+      let idx=0;
+
+      while ( idx < parsedJ.length){
+          let tr2=document.createElement("tr")
+          for(const val of Object.values(parsedJ[idx])){
+              let td=document.createElement("td")
+              td.textContent=val;
+              tr2.appendChild(td);
+              //const col=parsedJ[idx].color.toLowerCase()
+              td.style.backgroundColor=parsedJ[idx].color.toLowerCase()
+          }
+          idx++
+          tbodi.appendChild(tr2)
+      }
+      mainTable.appendChild(tbodi)
+  }
+
+
+
+  function generateInputsForUser(){
+      for (const key of Object.keys(parsedJ[0])) {
+          var divA=document.createElement("div")
+          let label = document.createElement("label")
+          label.textContent=key
+          let inputi=document.createElement("input")
+          inputi.type="text"
+          inputi.setAttribute("id",key)
+          divA.appendChild(label)
+          divA.appendChild(inputi)
+          divA.setAttribute("class","a")
+          infoParti.append(divA)
+      }
+  }
+
+
+  function addRow(){
+      let name = document.getElementById("name");
+      let surname = document.getElementById("surname");
+      let age = document.getElementById("age");
+      let email = document.getElementById("email");
+      let color = document.getElementById("color");
+
+      let tr3=document.createElement("tr")
+
+
+      tr3.innerHTML="<td>" + name.value + "</td>" +
+                    "<td>" + surname.value + "</td>" +
+                    "<td>" + age.value + "</td>" +
+                    "<td>" + email.value + "</td>" +
+                    "<td>" + color.value + "</td>"
+
+      tr3.style.backgroundColor=color.value;
+      tbodi.appendChild(tr3)
+
+      name.value=""
+      surname.value=""
+      age.value=""
+      email.value=""
+      color.value=""
+  }
+
+
+  function exportTOJSON(){
+      var dataVal=[]
+
+      let iterator=document.querySelector("tbody")
+      for(const row of iterator.rows){
+         // console.log(row)
+          let x = {
+              "name": row.children[0].textContent,
+              "surname": row.children[1].textContent,
+              "age": row.children[2].textContent,
+              "email": row.children[3].textContent,
+              "color": row.children[4].textContent
+          }
+          dataVal.push(x)
+      }
+      const str=JSON.stringify(dataVal,null,2);
+      alert(str)
+  }
+
+</script>
+
+</body>
+</html>

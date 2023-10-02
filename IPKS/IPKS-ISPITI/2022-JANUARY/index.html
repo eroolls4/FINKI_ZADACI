@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+  <style>
+
+
+    table,td,th{
+      border: black 1px solid;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    .tr{
+        padding: 15px;
+    }
+
+
+    #mainPart{
+      width: 700px;
+    }
+
+    #inputPart{
+      width: 300px;
+    }
+
+    #editRadio{
+      margin-left: 45px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .post{
+      padding-top:45px ;
+    }
+
+    .v{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 10px;
+    }
+
+    #categorySelected{
+      margin-left: -15px;
+      width: 100px;
+    }
+
+    #removedLinks{
+      float: right;
+     margin-top: -230px;
+    }
+
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+
+<div id="mainPart">
+
+
+    <h2>Post Details</h2>
+    <div id="inputPart">
+        <div class="v">
+            <label>Title</label>
+            <input type="text" id="title">
+        </div>
+        <div class="v">
+            <label class="post">Post</label>
+            <textarea id="postPart"></textarea>
+        </div>
+        <div class="5g">
+            <label>Content type</label>
+          <div id="editRadio">
+            <input type="radio" id="free">
+            <label>Free</label>
+            <input type="radio" id="paid">
+            <label>Paid</label>
+          </div>
+        </div>
+        <div class="v">
+            <label>Category</label>
+            <select id="categorySelected">
+                <option></option>
+                <option>Science</option>
+                <option>Education</option>
+                <option>Industry</option>
+            </select>
+        </div>
+    </div>
+
+  <button onclick="importPost()">IMPORT POST</button>
+
+  <section id="removedLinks">
+    <h3>Removed Links</h3>
+    <ul id="addHereRemoved">
+
+    </ul>
+  </section>
+
+</div>
+
+<div id="solutionPart">
+  <h4 >PUBLISHED POSTS <span id="published">0</span></h4>
+
+  <table id="tablica">
+    <thead>
+    <th>Title</th>
+    <th>Post</th>
+    <th>Link</th>
+    <th>Type</th>
+    <th>Category</th>
+    <th>Actions</th>
+    </thead>
+
+    <tbody id="tablePart">
+
+    </tbody>
+
+
+  </table>
+
+
+</div>
+
+
+
+
+
+<script>
+  var data = '[{"title":"FCSE announcement", "post":"FSCE is starting with classes this semestar from 15th Feb.", "type":"Free", "category":"Education", "published":true},' +
+             '{"title":"What is ann NFT", "post":"An NFT, which stands for non-fungible token, is a unique unit of data employing technology that allows digital content to become logged and authenticated on cryptocurrency blockchains", "type":"Free", "category":"Science", "published": false}]'
+
+  var parsingData=JSON.parse(data)
+
+
+  var getPlaceForAppendingTableRows=document.getElementById("tablePart")
+  var addRemovedLinks=document.getElementById("addHereRemoved")
+
+
+  var titulli=document.getElementById("title")
+  var post=document.getElementById("postPart")
+  var category=document.getElementById("categorySelected")
+  var contentFree=document.getElementById("free")
+  var contentPaid=document.getElementById("paid")
+
+
+
+
+
+  window.onload=( () =>{
+    for(i=0;i<parsingData.length;i++){
+        let tableRow = document.createElement("tr")
+        const link = getLink(parsingData[i].title)
+        tableRow.setAttribute("class", "tr")
+
+      tableRow.innerHTML="<td>" + parsingData[i].title + "</td>" +
+                         "<td>" + parsingData[i].post + "</td>" +
+                         "<td>" + link + "</td>" +
+                         "<td>" + parsingData[i].type + "</td>" +
+                         "<td>" + parsingData[i].category + "</td>" +
+                         "<td><button onclick='publishPost(this)'>Publish</button><button onclick='removePost(this)'>Remove</button></td>"
+
+      getPlaceForAppendingTableRows.append(tableRow)
+    }
+  })
+
+
+  function importPost(){
+
+      if(titulli.value==="" || post.value==="" || category.value==="" ||(contentPaid.checked===false && contentFree.checked===false)){
+          alert("please fill all")
+          return ;
+      }
+
+
+
+    if(!isValidTitle(titulli.value)){
+      alert("invalid title name")
+      return ;
+    }
+
+
+    let tableRow=document.createElement("tr")
+      tableRow.setAttribute("class","tr")
+    const link=getLink(titulli.value)
+
+    console.log(titulli.value)
+    console.log(post.value)
+
+   console.log(contentFree.checked ? contentFree.value : contentPaid.value);
+
+
+    tableRow.innerHTML="<td>" + titulli.value + "</td>" +
+                       "<td>" + post.value + "</td>" +
+                       "<td>" + link + "</td>" +
+                       "<td>" + (contentFree.checked ? "Free" : "Paid") + "</td>" +
+                       "<td>" + category.value + "</td>" +
+                      "<td><button onclick='publishPost(this)'>Publish</button><button onclick='removePost(this)'>Remove</button></td>"
+
+    getPlaceForAppendingTableRows.append(tableRow)
+
+  }
+
+  function isValidTitle(title){
+    const regex = /[^0-9A-Za-z\s]/;
+    return !regex.test(title.trim());
+  }
+
+
+  function getLink(title){
+    let tmp = "finki.ukim.mk/"
+    return tmp + title.trim().toLowerCase().split(/\s+/).join("-")
+  }
+
+
+  function publishPost(btn){
+    let parentOfCurr=btn.parentNode.parentNode
+
+    parentOfCurr.style.backgroundColor="lightblue"
+
+    btn.disabled=true
+    btn.nextElementSibling.disabled=true
+  }
+
+  function removePost(btn){
+    let parentOfCurrElem=btn.parentNode.parentNode
+
+    let opacity=1.0
+    const li=document.createElement("li")
+
+    let animaID=setInterval( () =>{
+      opacity -=0.1
+      parentOfCurrElem.style.opacity=opacity
+    },100)
+
+    setTimeout( () => {
+      clearInterval(animaID)
+      li.innerHTML=parentOfCurrElem.children[2].textContent
+      getPlaceForAppendingTableRows.removeChild(parentOfCurrElem)
+      addRemovedLinks.append(li)
+    },1000)
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <style>
+    #mainPart {
+      width: 500px;
+    }
+    .newDiv {
+      display: inline-block;
+    }
+    #selected {
+      height: 30px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+<div id="mainPart">
+
+  <div id="strings">
+
+  </div>
+
+  <div id="selected">
+
+  </div>
+  <button onclick="checkLength()">Check</button>
+
+</div>
+
+
+<script>
+  const letters = ["A", "B", "C", "D", "E", "F", "T",
+    "G", "H", "I", "J", "K", "L",
+    "M", "N", "O", "P", "Q", "R",
+    "U", "V", "W", "X", "Y", "Z"]
+
+  const lettersLength = letters.length
+  var appendStrings = document.getElementById("strings")
+  var putSelected=document.getElementById("selected")
+
+  function generateStrings() {
+    for (i = 0; i < 50; i++) {
+      let randomLength = Math.floor(Math.random() * 7) + 3;
+      var randomString = ""
+      for (j = 0; j < randomLength; j++) {
+        let randomIndx = Math.floor(Math.random() * letters.length)
+        randomString += letters.at(randomIndx)
+      }
+
+      newDiv = document.createElement("div")
+      newDiv.innerHTML = randomString
+      newDiv.style.backgroundColor = getRandomColor();
+      newDiv.setAttribute("class", "newDiv")
+      newDiv.setAttribute("onclick", "putToSelected(this)")
+      appendStrings.appendChild(newDiv)
+    }
+  }
+
+  function getRandomColor() {
+    return '#' + Math.floor(Math.random() * 255).toString(16) +
+            Math.floor(Math.random() * 255).toString(16) +
+            Math.floor(Math.random() * 255).toString(16);
+  }
+
+  function putToSelected(div) {
+    div.setAttribute("onclick","moveBackToGenerated(this)")
+    putSelected.appendChild(div)
+  }
+
+  function moveBackToGenerated(div){
+    div.setAttribute("onclick","putToSelected(this)")
+    appendStrings.appendChild(div)
+  }
+
+  //   let divs=document.getElementsByClassName("newDiv")
+  function checkLength() {
+    let divs = document.getElementById("selected").childNodes;
+    var total = 0;
+
+    for (i = 0; i < divs.length - 1; i++) {
+      if (divs[i].nodeType === 1 && divs[i + 1].nodeType === 1) {
+        lastCharOfFirstString = divs[i].innerHTML.charAt(divs[i].innerHTML.length - 1);
+        firstCharOfSecondString = divs[i + 1].innerHTML.charAt(0);
+        total += divs[i].innerHTML.length;
+
+        if (lastCharOfFirstString !== firstCharOfSecondString) {
+          alert("ERROR");
+          return;
+        }
+      }
+    }
+    total += divs[divs.length - 1].innerHTML.length;
+    alert("TOTAL POINTS : " + total);
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    generateStrings();
+  });
+</script>
+
+
+</body>
+</html>

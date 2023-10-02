@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+        #mainPart {
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        #numberCycle {
+            height: 50px;
+            background-color: green;
+            width: 70px;
+            text-align: center;
+
+            border-radius: 50%;
+            margin-left: 50px;
+
+        }
+
+        #numberValue {
+            font-size: 40px;
+        }
+
+        #userCards {
+            width: 100%;
+            margin-top: 20px;
+            margin-left: 50px;
+        }
+
+        body{
+            background-color: hotpink;
+        }
+
+
+        .boxes {
+            height: 320px;
+            width: 200px;
+            display: inline-block;
+            margin-right: 10px;
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #numbers {
+            margin-top: 20px;
+            display: inline-block;
+            margin-right: 10px;
+            border-radius: 50%;
+            height: 15px;
+            background-color: deepskyblue;
+            width: 15px;
+            padding: 3px;
+            text-align: center;
+        }
+
+        #brojki {
+            display: inline-block;
+        }
+
+        #butoni {
+
+            width: 100px;
+            margin: 0 auto;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div id="mainPart">
+    <h3>Generated number:</h3>
+    <div id="numberCycle">
+        <span id="numberValue">0</span>
+    </div>
+</div>
+
+<div id="userCards">
+
+
+</div>
+<div id="butoni">
+
+    <button onclick="nextRound()">NEXT ROUND</button>
+</div>
+
+<script>
+    var jsonGiven = '[{"id":1,"name":"Jovan", "username":"jotir", "numbers":[5,1]},' +
+                     '{"id":2,"name":"Angel","username":"ansr", "numbers":[3,7]}, ' +
+                     '{"id":2,"name":"Eroll","username":"testbaba12", "numbers":[4,9]}, ' +
+                     '{"id":2,"name":"Avion","username":"ballon", "numbers":[6,8]}, ' +
+                     '{"id":3,"name":"Manja","username":"maks","numbers":[2,6]}]'
+
+    var placeToAddBoxes = document.getElementById("userCards")
+    var data = JSON.parse(jsonGiven)
+    var mainNumber = document.getElementById("numberValue")
+
+    var userBoxes = [];
+    let winnersAlerted = [];
+    var rollingNumbers = [];
+    var roundNumber = 1;
+    var roundWinner = null;
+  //  alert(`STARTING ROUND NUMBER ${roundNumber}`);
+
+    window.onload = (() => {
+        let tmpSum=0;
+        for (i = 0; i < data.length; i++) {
+            let first = document.createElement("div");
+            let newDiv = document.createElement("div");
+            let name = data[i].name;
+            let username = data[i].username;
+            let numbers = data[i].numbers;
+
+
+            tmpSum = numbers.reduce((sum, number) => sum + number, 0);
+
+            newDiv.innerHTML+= "<p>" + "Name: " + name + "</p>" +
+                               "<p>" + "Username: " + username + "</p>" +
+                               "<p id=sum>" + "Sum: " + tmpSum + "</p>" +
+                               "<p>" + "Numbers:" + "</p>";
+
+            let numbersDiv = document.createElement("div");
+            for (j = 0; j < numbers.length; j++) {
+                numbersDiv.setAttribute("id", "brojki");
+                numbersDiv.innerHTML += "<span id='numbers'>" + numbers[j] + "</span>";
+
+            }
+            newDiv.append(numbersDiv);
+
+            first.append(newDiv);
+
+            userBoxes.push({
+                name: name,
+                username: username,
+                numbers: numbers,
+                box: first,
+                total: tmpSum,
+                index: i,
+                isCandidateForWinner : false
+            });
+
+            first.setAttribute("class", "boxes");
+            first.style.backgroundColor = generateRandomColor();
+
+            placeToAddBoxes.append(first);
+        }
+    });
+
+    function generateRandomColor() {
+        return '#' + Math.floor(Math.random() * 255).toString(16) +
+                     Math.floor(Math.random() * 255).toString(16) +
+                     Math.floor(Math.random() * 255).toString(16);
+    }
+
+    function generateRandomNumber() {
+        return Math.floor(Math.random() * 11);
+    }
+
+    function startRolling(user) {
+
+        let rollingInterval = setInterval(() => {
+            let newNumber = generateRandomNumber();
+            mainNumber.textContent = newNumber;
+        }, 100);
+
+        setTimeout(() => {
+            clearInterval(rollingInterval);
+            let newNumber = generateRandomNumber();
+            mainNumber.textContent = newNumber;
+
+            user.total += newNumber;
+            user.numbers.push(newNumber);
+            //????
+
+            let numbersDiv = user.box.querySelector("#brojki");
+            numbersDiv.innerHTML = user.numbers
+                                       .map(number => "<span id='numbers'>" + number + "</span>")
+                                       .join("");
+
+
+            let sumElement = user.box.querySelector("#sum");
+            sumElement.textContent = "Sum: " + user.total;
+
+            if (user.total >= 30) {
+                user.isCandidateForWinner  = true;
+                checkForWinner();
+            }
+        }, 4000);
+    }
+
+
+
+    function checkForWinner() {
+        // let candidateWinners = userBoxes.filter(user => user.isCandidateForWinner);
+        //
+        // let highestTotal = 0;
+        // if (candidateWinners.length > 1) {
+        //
+        //     candidateWinners.forEach(user => {
+        //         if (user.total > highestTotal) {
+        //             highestTotal = user.total;
+        //             roundWinner = user; // Update the round winner
+        //         }
+        //     });
+        //
+        //     candidateWinners.forEach(candidate => {
+        //         if (candidate !== roundWinner) {
+        //             candidate.isCandidateForWinner = false;
+        //         }
+        //     });
+        // } else if (candidateWinners.length === 1) {
+        //     roundWinner = candidateWinners[0]; // Update the round winner
+        // }
+        //
+        // if (roundWinner) {
+        //     roundWinner.isWinner = true;
+        // }
+        //
+        // candidateWinners = userBoxes.filter(user => user.isCandidateForWinner);
+        //
+        // candidateWinners.forEach(winningUser => {
+        //     let opacity = 1;
+        //     let fadeOutInterval = setInterval(() => {
+        //         winningUser.box.style.opacity = opacity;
+        //         opacity -= 0.1;
+        //
+        //         if (opacity <= 0) {
+        //             clearInterval(fadeOutInterval);
+        //             winningUser.box.remove();
+        //             alert("For round number " + roundNumber + ", the winner is user with index " + winningUser.index);
+        //
+        //             let indexToRemove = userBoxes.findIndex(user => user.index === winningUser.index);
+        //             if (indexToRemove !== -1) {
+        //                 userBoxes.splice(indexToRemove, 1);
+        //                 updateIndexes(indexToRemove);
+        //             }
+        //         }
+        //     }, 100);
+        // });
+
+            let candidateWinners = userBoxes.filter(user => user.isCandidateForWinner);
+
+            if (candidateWinners.length > 1) {
+                let highestTotal = 0;
+                let roundWinner = null;
+
+                candidateWinners.forEach(user => {
+                    if (user.total > highestTotal) {
+                        highestTotal = user.total;
+                        roundWinner = user; // Update the round winner
+                    }
+                });
+
+                if (roundWinner) {
+                    roundWinner.isWinner = true;
+                    let opacity = 1;
+                    let fadeOutInterval = setInterval(() => {
+                        roundWinner.box.style.opacity = opacity;
+                        opacity -= 0.1;
+
+                        if (opacity <= 0) {
+                            clearInterval(fadeOutInterval);
+                            roundWinner.box.remove();
+                            alert("For round number " + roundNumber + ", the winner is user with index " + roundWinner.index);
+
+                            let indexToRemove = userBoxes.findIndex(user => user.index === roundWinner.index);
+                            if (indexToRemove !== -1) {
+                                userBoxes.splice(indexToRemove, 1);
+                                updateIndexes(indexToRemove);
+                            }
+                        }
+                    }, 100);
+                }
+            } else if (candidateWinners.length === 1) {
+                let winner = candidateWinners[0];
+                winner.isWinner = true;
+                let opacity = 1;
+                let fadeOutInterval = setInterval(() => {
+                    winner.box.style.opacity = opacity;
+                    opacity -= 0.1;
+                    if (opacity <= 0) {
+                        clearInterval(fadeOutInterval);
+                        winner.box.remove();
+                        alert("For round number " + roundNumber + ", the winner is user with index " + winner.index);
+
+                        let indexToRemove = userBoxes.findIndex(user => user.index === winner.index);
+                        if (indexToRemove !== -1) {
+                            userBoxes.splice(indexToRemove, 1);
+                            updateIndexes(indexToRemove);
+                        }
+                    }
+                }, 100);
+            }
+    }
+
+
+
+
+    function updateIndexes(removedIndex) {
+        for (let i = removedIndex; i < userBoxes.length; i++) {
+            userBoxes[i].index--;
+        }
+    }
+
+
+    function nextRound() {
+        roundWinner = null; // Reset the round winner for the next round
+        roundNumber++;
+        userBoxes.forEach(user => {
+            if (!user.isWinner) {
+                startRolling(user);
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>
+

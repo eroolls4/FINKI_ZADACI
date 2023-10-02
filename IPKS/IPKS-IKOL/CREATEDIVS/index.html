@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+  <input type="text" id="input">
+  <button onclick="addDiv()">ADD</button>
+
+</div>
+
+<div id="sol">
+
+
+</div>
+
+
+
+<script>
+
+  function addDiv(){
+
+    var getInput=document.getElementById("input")
+    var where=document.getElementById("sol")
+
+    const inputString=getInput.value.split(",")
+  //  console.log(inputString)
+    let bacgroundColor=inputString[0]
+    let width=inputString[1] + "px"
+    let height=inputString[2] + "px"
+    let txt=inputString[3]
+
+    // console.log(bacgroundColor)
+    // console.log(width)
+    // console.log(height)
+    // console.log(txt)
+
+
+
+    var createdDiv = document.createElement("div")
+
+    createdDiv.style.backgroundColor = bacgroundColor
+    createdDiv.style.textAlign = "center"
+    createdDiv.style.height = height
+    createdDiv.style.width = width
+    createdDiv.innerText = txt.toUpperCase()
+
+    where.append(createdDiv)
+  }
+
+</script>
+
+
+</body>
+</html>

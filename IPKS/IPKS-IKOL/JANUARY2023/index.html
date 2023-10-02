@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="parent">
+
+</div>
+<script>
+  const dataJSON = '[{"Albania":"Tirana"},{"Andorra":"Andorra la Vella"},{"Armenia":"Yerevan"},{"Austria":"Vienna"},{"Azerbaijan":"Baku"},{"Belarus":"Minsk"},{"Belgium":"Brussels"},{"Bosnia and Herzegovina":"Sarajevo"},{"Bulgaria":"Sofia"},{"Croatia":"Zagreb"},{"Cyprus":"Nicosia"},{"Czechia":"Prague"},{"Denmark":"Copenhagen"},{"Estonia":"Tallinn"},{"Finland":"Helsinki"},{"France":"Paris"},{"Georgia":"Tbilisi"},{"Germany":"Berlin"},{"Greece":"Athens"},{"Hungary":"Budapest"},{"Iceland":"Reykjavik"},{"Ireland":"Dublin"},{"Italy":"Rome"},{"Kazakhstan":"Astana"},{"Latvia":"Riga"},{"Liechtenstein":"Vaduz"},{"Lithuania":"Vilnius"},{"Luxembourg":"Luxembourg"},{"Malta":"Valletta"},{"Moldova":"Chisinau"},{"Monaco":"Monaco"},{"Montenegro":"Podgorica"},{"Netherlands":"Amsterdam"},{"Macedonia":"Skopje"},{"Norway":"Oslo"},{"Poland":"Warsaw"},{"Portugal":"Lisbon"},{"Romania":"Bucharest"},{"Russia":"Moscow"},{"San Marino":"San Marino"},{"Serbia":"Belgrade"},{"Slovakia":"Bratislava"},{"Slovenia":"Ljubljana"},{"Spain":"Madrid"},{"Sweden":"Stockholm"},{"Switzerland":"Bern"},{"Turkey":"Ankara"},{"Ukraine":"Kyiv"},{"United Kingdom":"London"},{"Vatican City":"Vatican City"}]'
+  let data = JSON.parse(dataJSON);
+  console.log(data);
+
+  let five = [];
+  let i = -1;
+  let points = 0;
+
+  const parent = document.getElementById("parent");
+
+  function start() {
+    i = -1;
+    points = 0;
+    parent.innerHTML = '';
+    five = data.sort(() => 0.5 - Math.random()).slice(0, 5);
+    console.log(five);
+  }
+
+  function putNext() {
+    i++;
+    const div = document.createElement('div');
+    const txt = document.createElement('h5');
+    const input = document.createElement('input');
+    input.type = 'text';
+    txt.innerHTML = 'What is capital of ' + Object.keys(five[i])[0] + '?';
+    const button = document.createElement('button');
+    button.style.position='inline-block'
+    button.textContent = 'Next';
+    button.onclick = () => trySolve(input.value);
+    parent.appendChild(div);
+    div.appendChild(txt);
+    div.appendChild(input);
+    div.appendChild(button);
+  }
+
+  function trySolve(ans) {
+    if (Object.values(five[i])[0] === ans) {
+      points++;
+    }
+    if (i === 4) {
+      alert('you have' + points + ' points');
+      start();
+      putNext();
+    }
+    else
+      putNext();
+  }
+  start();
+  putNext();
+</script>
+
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <style>-->
+<!--        .question {-->
+<!--            margin-bottom: 10px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="parent">-->
+
+<!--</div>-->
+<!--<script>-->
+<!--    const dataJSON = '[{"Albania":"Tirana"},{"Andorra":"Andorra la Vella"},{"Armenia":"Yerevan"},{"Austria":"Vienna"},{"Azerbaijan":"Baku"},{"Belarus":"Minsk"},{"Belgium":"Brussels"},{"Bosnia and Herzegovina":"Sarajevo"},{"Bulgaria":"Sofia"},{"Croatia":"Zagreb"},{"Cyprus":"Nicosia"},{"Czechia":"Prague"},{"Denmark":"Copenhagen"},{"Estonia":"Tallinn"},{"Finland":"Helsinki"},{"France":"Paris"},{"Georgia":"Tbilisi"},{"Germany":"Berlin"},{"Greece":"Athens"},{"Hungary":"Budapest"},{"Iceland":"Reykjavik"},{"Ireland":"Dublin"},{"Italy":"Rome"},{"Kazakhstan":"Astana"},{"Latvia":"Riga"},{"Liechtenstein":"Vaduz"},{"Lithuania":"Vilnius"},{"Luxembourg":"Luxembourg"},{"Malta":"Valletta"},{"Moldova":"Chisinau"},{"Monaco":"Monaco"},{"Montenegro":"Podgorica"},{"Netherlands":"Amsterdam"},{"Macedonia":"Skopje"},{"Norway":"Oslo"},{"Poland":"Warsaw"},{"Portugal":"Lisbon"},{"Romania":"Bucharest"},{"Russia":"Moscow"},{"San Marino":"San Marino"},{"Serbia":"Belgrade"},{"Slovakia":"Bratislava"},{"Slovenia":"Ljubljana"},{"Spain":"Madrid"},{"Sweden":"Stockholm"},{"Switzerland":"Bern"},{"Turkey":"Ankara"},{"Ukraine":"Kyiv"},{"United Kingdom":"London"},{"Vatican City":"Vatican City"}]';-->
+<!--    const data = JSON.parse(dataJSON);-->
+<!--    console.log(data);-->
+
+<!--    let five = [];-->
+<!--    let i = -1;-->
+<!--    let points = 0;-->
+
+<!--    const parent = document.getElementById("parent");-->
+
+<!--    function start() {-->
+<!--        i = -1;-->
+<!--        points = 0;-->
+<!--        parent.innerHTML = '';-->
+<!--        five = data.sort(() => 0.5 - Math.random()).slice(0, 5);-->
+<!--        console.log(five);-->
+<!--    }-->
+
+<!--    function putNext() {-->
+<!--        i++;-->
+<!--        const div = document.createElement('div');-->
+<!--        div.classList.add('question');-->
+<!--        const txt = document.createElement('h5');-->
+<!--        const input = document.createElement('input');-->
+<!--        input.type = 'text';-->
+<!--        txt.innerHTML = 'What is the capital of ' + Object.keys(five[i])[0] + '?';-->
+<!--        parent.appendChild(div);-->
+<!--        div.appendChild(txt);-->
+<!--        div.appendChild(input);-->
+
+<!--        input.addEventListener('keyup', function(event) {-->
+<!--            if (event.key === 'Enter') {-->
+<!--                trySolve(input.value);-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    function trySolve(ans) {-->
+<!--        if (Object.values(five[i])[0] === ans) {-->
+<!--            points++;-->
+<!--        }-->
+
+<!--        if (i === 4) {-->
+<!--            alert('You have ' + points + ' points');-->
+<!--            start();-->
+<!--            putNext();-->
+<!--        } else {-->
+<!--            putNext();-->
+<!--        }-->
+<!--    }-->
+<!--    start();-->
+<!--    putNext();-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

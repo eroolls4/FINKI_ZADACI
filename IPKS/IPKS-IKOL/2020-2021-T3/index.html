@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2020-2021-T3</title>
+</head>
+
+<style>
+
+  .a{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-bottom: 15px;
+  }
+
+  #firstInner{
+    width: 250px;
+  }
+
+  #firstMain > h2:nth-child(1){
+    text-align: center;
+  }
+
+  #firstDiv > h2{
+    color: rebeccapurple;
+  }
+
+  .sobrjakaj{
+    display: inline-block;
+    margin-left: 20px;
+    padding-bottom: 15px;
+  }
+
+  .n{
+    width: 250px;
+    text-align: center;
+    display: inline-block;
+    height: 250px;
+    padding-top: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+
+  .n button{
+    display: inline-block;
+  }
+
+  /*#addHere{*/
+  /*  display: flex;*/
+  /*}*/
+
+
+
+
+</style>
+
+
+<script>
+  var smetkiCount=0;
+
+  function addCar(){
+    var name = document.getElementById("name")
+    var surname = document.getElementById("surname")
+    var registration = document.getElementById("table")
+    var years = document.getElementById("years")
+    var yes = document.getElementById("yes")
+    var no = document.getElementById("no")
+
+    if(name.value =="" || surname.value=="" || registration.value=="" || years.value=="" ||(yes.checked==false && no.checked==false)){
+      alert("FILL ALL")
+      return ;
+    }
+
+ //   console.log(typeof years)
+
+   if(checkTableFormat(registration.value)){
+     alert("enter valid registration")
+     return;
+   }
+
+   if(isNaN(years.value)){
+     alert("enter valid year")
+     return;
+   }
+
+   var basePrice=3000;
+   if(checkGoldTable(registration.value)){
+     basePrice+=1000;
+   }
+
+   var sobrakjaj=" "
+   if(yes.checked==true){
+     basePrice +=500;
+     sobrakjaj="HAS"
+   }
+   sobrakjaj="NOPE"
+
+    var where=document.getElementById("addHere")
+    var toAdd=document.createElement("div")
+
+    toAdd.innerHTML = "<p>" + name.value + "</p>" +
+                       "<p>" + registration.value + "</p>" +
+                       "<p>" + "Sobrjakjaj:" + sobrakjaj + "</p>" +
+                        "<p>" + "YEAR OF CAR:" + years.value + "</p>" +
+                       "<p>" + "TOTAL:" + basePrice + "</p>" +
+                       "<button onclick='plati(this)'>Pay</button><button onclick='deleteSmetka(this)'>Remove</button>"
+
+
+    toAdd.setAttribute("class" ,"n")
+
+
+    if(years.value > 30){
+       toAdd.style.backgroundColor="red"
+    }else{
+      toAdd.style.backgroundColor="green"
+    }
+
+     where.append(toAdd)
+
+     smetkiCount++;
+
+    var count=document.getElementById("price")
+    count.innerHTML=smetkiCount;
+
+
+    function checkGoldTable(table) {
+      var parts = table.split("-")
+      var br = parts[1];
+      if (br[0] === br[1] && br[0] === br[2] && br[0] === br[3]) {
+        return true;
+      }
+      return false;
+    }
+
+    function checkTableFormat(table) {
+      var regex = /^[A-Z][A-Z]-[0-9][0-9][0-9][0-9]-[A-Z][A-Z]$/
+      if (regex.test(table)) {
+        return false
+      } else {
+        return true;
+      }
+    }
+  }
+
+  function  plati(btn){
+    btn.disabled=true
+    btn.nextElementSibling.disabled=true;
+  }
+  function deleteSmetka(btn){
+     var parent=btn.parentNode
+
+    parent.remove()
+
+    --smetkiCount;
+    let display=document.getElementById("price")
+    display.innerHTML=smetkiCount;
+  }
+
+
+
+
+
+</script>
+
+<body>
+<div id="firstMain">
+<h2>Car register</h2>
+
+<div id="firstInner">
+  <div class="a">
+    <label>Name</label>
+    <input type="text" id="name">
+  </div>
+
+  <div class="a">
+    <label>Surname</label>
+    <input type="text" id="surname">
+  </div>
+
+  <div class="a">
+    <label>Table</label>
+    <input type="text" id="table">
+  </div>
+
+  <div class="a">
+    <label>Years</label>
+    <input type="text" id="years">
+  </div>
+
+  <div>
+    <label>Soobrakjaj?</label>
+    <div class="sobrjakaj">
+      <label style="display: inline">YES</label>
+      <input type="radio" id="yes" name="soobrakjaj">
+      <label>NO</label>
+      <input type="radio" id="no" name="soobrakjaj">
+    </div>
+  </div>
+
+
+  <div>
+    <button onclick="addCar()">Generate transaction</button>
+  </div>
+
+
+
+</div>
+
+  <div>
+    <div>
+      <h2>Transactions</h2>
+    </div>
+
+    <div>
+    <h2>Total for paying : <span id="price">0</span></h2>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toAdd">
+  <ul id="addHere">
+
+  </ul>
+
+</div>
+
+
+</body>
+</html>

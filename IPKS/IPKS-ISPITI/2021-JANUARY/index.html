@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+  <style>
+    .a{
+      display: grid;
+     gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 15px;
+    }
+
+
+    #inner0{
+      width: 350px;
+      height: 200px;
+    }
+
+    #inner0>button{
+      margin-top: 30px;
+    }
+
+    .n{
+      text-align: center;
+      height: 250px;
+      width: 150px;
+      opacity: 1;
+      display: inline-block;
+      margin-right: 20px;
+      padding: 20px;
+    }
+
+
+
+
+  </style>
+</head>
+<body>
+<div id="mainParti">
+  <h2>Smetki system</h2>
+
+  <div id="inner0">
+    <div class="a">
+      <label>IME:</label>
+      <input type="text" id="ime">
+    </div>
+
+    <div class="a">
+
+      <label>Prezime:</label>
+      <input type="text" id="prez">
+
+    </div>
+
+    <div class="a">
+      <label>Id:</label>
+      <input type="text" id="idja">
+
+
+    </div>
+
+    <div class="a">
+
+      <label>Promet:</label>
+      <input type="text" id="promet">
+
+    </div>
+
+
+    <button onclick="zacuvaj()">ZACUVAJ</button>
+
+  </div>
+
+
+  <div id="secondPart">
+    <h2>Vneseni smetki</h2>
+
+    <div id="boxesContainer">
+
+
+    </div>
+
+
+  </div>
+
+
+  <div id="plateniList">
+    <h2>Plateni</h2>
+
+
+  </div>
+
+
+</div>
+
+
+
+<script>
+  datajson1='[{"ime":"Nikola","prezime":"Nikolovski","id":"NNN1asdfgh","promet":"7000"},' +
+            '{"ime":"Nikolina","prezime":"Nikolovska","id":"NNN2asdfgh","promet":"3000"}]'
+  const parsoje=JSON.parse(datajson1)
+
+  var emri=document.getElementById("ime")
+  var mbiemri=document.getElementById("prez")
+  var idja=document.getElementById("idja")
+  var prometi=document.getElementById("promet")
+
+  var placeForAddingTickets=document.getElementById("boxesContainer")
+
+  var placeForAddingPlateni=document.getElementById("plateniList")
+
+
+ // var users=new Set()
+
+  const userData = new Map();
+
+
+
+  window.onload=(() => {
+    let bgColor=""
+    for(i=0;i<parsoje.length;i++) {
+      if (parsoje[i].promet > 5000) {
+        bgColor = "green"
+      } else {
+        bgColor = "red"
+      }
+      const newDiv = document.createElement("div")
+      newDiv.setAttribute("class", "n")
+      newDiv.style.backgroundColor = bgColor
+      const randomNumber = generateFiveDigit()
+
+      newDiv.innerHTML =
+              "<p>Cmetka broj: " + randomNumber + "</p>" +
+              "<p>Ime: " + parsoje[i].ime + "</p>" +
+              "<p>Prezime: " + parsoje[i].prezime + "</p>" +
+              "<p>Id: " + parsoje[i].id + "</p>" +
+              "<p>Promet: " + parsoje[i].promet + "</p>" +
+              "<button onclick='animateKtu(this)'>Plati</button>";
+
+
+      placeForAddingTickets.append(newDiv)
+    }
+  })
+
+  function generateFiveDigit(){
+        return Math.floor(Math.random() * 90000) + 10000
+  }
+
+
+  function zacuvaj(){
+
+    if(emri.value==="" || mbiemri.value==="" || idja.value==="" || prometi.value===""){
+      alert("please fill all")
+      return;
+    }
+
+    if(isNaN(parseInt(prometi.value))){
+      alert("enter valid promet")
+      return ;
+    }
+
+    if(!isValidID(idja.value)){
+      alert("please enter a valid id 10 length and at lease 3 uppercase and at least one digit")
+      return ;
+    }
+
+    updateUser(idja.value,prometi.value)
+
+  }
+
+
+
+
+  function updateUser(id, newPromet) {
+    if (userData.has(id)) {
+      const userElement = userData.get(id);
+      userElement.children[4].textContent = "Promet: " + newPromet;
+    } else {
+      const bgColor = newPromet > 5000 ? "green" : "red";
+      const newDiv = document.createElement("div");
+      newDiv.setAttribute("class", "n");
+      newDiv.style.backgroundColor = bgColor;
+      const randomNumber = generateFiveDigit();
+
+      newDiv.innerHTML =
+              "<p>Cmetka broj: " + randomNumber + "</p>" +
+              "<p>Ime: " + emri.value + "</p>" +
+              "<p>Prezime: " + mbiemri.value + "</p>" +
+              "<p>Id: " + id + "</p>" +
+              "<p>Promet: " + newPromet + "</p>" +
+              "<button onclick='animateKtu(this)'>Plati</button>";
+
+      placeForAddingTickets.append(newDiv);
+      userData.set(id, newDiv); // Store user element for future updates
+    }
+  }
+
+  function isValidID(id){
+    const countDigits = id.split('').filter(char => !isNaN(char)).length;
+    const countUpperCase = id.split('').filter(char => isNaN(char) && char === char.toUpperCase()).length;
+
+    return id.length >= 10 && countDigits >= 1 && countUpperCase >= 3;
+  }
+
+
+
+  function animateKtu(btn){
+    let parent=btn.parentNode
+
+    let newVal=1.0
+    let animaId=setInterval( () =>{
+      newVal-=0.1;
+      parent.style.opacity=newVal
+    },100)
+
+
+    setTimeout( () =>{
+      clearInterval(animaId)
+      placeForAddingTickets.removeChild(parent)
+      parent.style.opacity = 1.0;
+      placeForAddingPlateni.append(parent)
+    },1000)
+
+  }
+
+</script>
+
+</body>
+</html>

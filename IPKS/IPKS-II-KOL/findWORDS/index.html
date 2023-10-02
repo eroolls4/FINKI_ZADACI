@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <style>
+    .box {
+      border: black solid 3px;
+      height: 120px;
+      width: 120px;
+      font-size: 120px;
+      text-align: center;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .box-container {
+      display: block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div id="mainPart"></div>
+
+<script>
+  const data = '["bukva","jazik","vokal","misla","tablo"]';
+  const parsedData = JSON.parse(data);
+  var where = document.getElementById("mainPart");
+  var gameOngoing = true;
+  var randomWord=generateRandomWord()
+
+  function generateRandomWord() {
+    const randomIndex = Math.floor(Math.random() * parsedData.length);
+    return parsedData[randomIndex];
+  }
+
+  function createBox() {
+    const box = document.createElement("div");
+    box.setAttribute("class", "box");
+    box.setAttribute("contenteditable", "true");
+    box.setAttribute("maxlength", "1");
+
+    box.addEventListener("input", function () {
+      const letter = box.textContent.trim();
+      if (letter.length === 1) {
+        const container = box.closest(".box-container"); // Find the closest container
+        checkInputAndRandomWord(container);
+      } else {
+        alert("Write only one letter per box, please.");
+      }
+    });
+    return box;
+  }
+
+  function generateAndFillBoxes(containerId, numBoxes) {
+    const container = document.createElement("div");
+    container.setAttribute("class", "box-container");
+
+    for (i = 0; i < numBoxes; i++) {
+      const box = createBox();
+      container.appendChild(box);
+    }
+
+    where.appendChild(container);
+    return container;
+  }
+  function resetGame() {
+    gameOngoing = true;
+   // randomWord = generateRandomWord(); // Generate a new random word
+    generateAndFillBoxes("mainPart", 5);
+  }
+
+
+  function checkInputAndRandomWord(container) {
+    if (!gameOngoing) {
+      return;
+    }
+
+    var elems = container.getElementsByClassName("box");
+    let arr = [];
+    let countGreens = 0;
+
+    for (i = 0; i < elems.length; i++) {
+      const letter = elems[i].textContent.trim();
+      if (letter) {
+        arr.push(letter);
+      }
+    }
+
+    if (arr.length !== 5) {
+      return;
+    }
+
+    for (i = 0; i < randomWord.length; i++) {
+      if (randomWord[i] === arr[i]) {
+        colorBox(i, "green", elems);
+        countGreens++;
+      } else if (arr.includes(randomWord[i])) {
+        colorBox(i, "yellow", elems);
+      }
+    }
+
+    if (countGreens === 5) {
+      gameOngoing = false;
+   //   alert("CONGRATS")
+      return ;
+    } else {
+      resetGame();
+    }
+  }
+
+
+  function colorBox(position, color, elements) {
+    elements[position].style.backgroundColor = color;
+  }
+
+  generateAndFillBoxes("mainPart", 5);
+
+</script>
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Title</title>-->
+
+<!--  <style>-->
+<!--    .box {-->
+<!--      border: black solid 3px;-->
+<!--      height: 120px;-->
+<!--      width: 120px;-->
+<!--      font-size: 120px;-->
+<!--      text-align: center;-->
+<!--      display: inline-block;-->
+<!--      margin-right: 5px;-->
+<!--    }-->
+
+<!--    .box-container {-->
+<!--      display: block;-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="mainPart"></div>-->
+
+<!--<script>-->
+<!--  const data = '["bukva","jazik","vokal","misla","tablo"]';-->
+<!--  const parsedData = JSON.parse(data);-->
+<!--  var where = document.getElementById("mainPart");-->
+<!--  var gameOngoing = true;-->
+<!--  var randomWord=generateRandomWord()-->
+
+<!--  function generateRandomWord() {-->
+<!--    const randomIndex = Math.floor(Math.random() * parsedData.length);-->
+<!--    return parsedData[randomIndex];-->
+<!--  }-->
+
+<!--  function createBox() {-->
+<!--    const box = document.createElement("div");-->
+<!--    box.setAttribute("class", "box");-->
+<!--    box.setAttribute("contenteditable", "true");-->
+<!--    box.setAttribute("maxlength", "1");-->
+
+<!--    box.addEventListener("input", function () {-->
+<!--      const letter = box.textContent.trim();-->
+<!--      if (letter.length === 1) {-->
+<!--        const lastContainer = document.querySelector(".box-container:last-child");-->
+<!--        const newBoxes = lastContainer.querySelectorAll(".box");-->
+<!--        checkInputAndRandomWord(newBoxes);-->
+<!--      } else {-->
+<!--        alert("Write only one letter per box, please.");-->
+<!--      }-->
+<!--    });-->
+<!--    return box;-->
+<!--  }-->
+
+<!--  function generateAndFillBoxes(containerId, numBoxes) {-->
+<!--    const container = document.createElement("div");-->
+<!--    container.setAttribute("class", "box-container");-->
+
+<!--    for (i = 0; i < numBoxes; i++) {-->
+<!--      const box = createBox();-->
+<!--      container.appendChild(box);-->
+<!--    }-->
+
+<!--    where.appendChild(container);-->
+<!--   // return container;-->
+<!--  }-->
+<!--  function resetGame() {-->
+<!--    gameOngoing = true;-->
+<!--    // randomWord = generateRandomWord(); // Generate a new random word-->
+<!--    generateAndFillBoxes("mainPart", 5);-->
+<!--  }-->
+
+
+<!--  function checkInputAndRandomWord(newboxes) {-->
+<!--    if (!gameOngoing) {-->
+<!--      return;-->
+<!--    }-->
+
+<!--   // var elems = container.getElementsByClassName("box");-->
+<!--    let arr = [];-->
+<!--    let countGreens = 0;-->
+
+<!--    for (i = 0; i < newboxes.length; i++) {-->
+<!--      const letter = newboxes[i].textContent.trim();-->
+<!--      if (letter) {-->
+<!--        arr.push(letter);-->
+<!--      }-->
+<!--    }-->
+
+<!--    if (arr.length !== 5) {-->
+<!--      return;-->
+<!--    }-->
+
+<!--    for (i = 0; i < randomWord.length; i++) {-->
+<!--      if (randomWord[i] === arr[i]) {-->
+<!--        colorBox(i, "green", elems);-->
+<!--        countGreens++;-->
+<!--      } else if (arr.includes(randomWord[i])) {-->
+<!--        colorBox(i, "yellow", elems);-->
+<!--      }-->
+<!--    }-->
+
+<!--    if (countGreens === 5) {-->
+<!--      gameOngoing = false;-->
+<!--      //   alert("CONGRATS")-->
+<!--      return ;-->
+<!--    } else {-->
+<!--      resetGame();-->
+<!--    }-->
+<!--  }-->
+
+
+<!--  function colorBox(position, color, elements) {-->
+<!--    elements[position].style.backgroundColor = color;-->
+<!--  }-->
+
+<!--  generateAndFillBoxes("mainPart", 5);-->
+
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+  <style>
+    .d{
+      display: inline-block;
+      border: 2px solid black;
+      height: 50px;
+      width: 50px;
+      margin: 10px;
+      text-align: center;
+      font-size: 40px;
+    }
+
+
+
+
+  </style>
+
+</head>
+<body>
+
+<div id="inputPlace">
+  <input type="number" min="1" max="12" id="inputi">
+  <button id="roll" onclick="rolliti()">ROLL</button>
+</div>
+
+<div id="dicesPart">
+  <div id="firstDice" class="d">
+    <span id="firstValue" class="s"></span>
+  </div>
+ <div id="second" class="d">
+   <span id="secondValue" class="s"></span>
+  </div>
+
+
+</div>
+
+<div id="histo">
+  <button id="histoButon" onclick="historyToJSON()">HISTORY TO JSON</button>
+</div>
+
+
+
+<script>
+
+  const place1 = document.getElementById("firstValue")
+  const place2 = document.getElementById("secondValue")
+  var userInput=document.getElementById("inputi")
+
+  var hasStoped=false;
+  var suma=0;
+
+
+  var rollHistory = [];
+
+  function rolliti(){
+
+    if(!userInput){
+      alert("please choose a value")
+      return ;
+    }
+
+    const duration=6000
+
+    intervali=setInterval(() =>{
+
+      const nrPar=generateRandom()
+      const nrDyt=generateRandom()
+
+      place1.innerText=nrPar
+      place2.innerHTML=nrDyt
+      suma=nrPar + nrDyt
+    },1000)
+
+    setTimeout(() =>{
+      clearInterval(intervali)
+      hasStoped=true;
+      addToHistory()
+      checkAndChangeColor()
+    },duration)
+  }
+
+
+  function generateRandom(){
+    return Math.floor((Math.random() * 6) + 1)
+  }
+
+
+  function checkAndChangeColor() {
+    if(hasStoped){
+      if (suma === parseInt(userInput.value)) {
+        userInput.style.backgroundColor = "green";
+      } else {
+        userInput.style.backgroundColor = "red";
+      }
+    }
+  }
+
+  function addToHistory() {
+    const roll = {
+      input: userInput.value,
+      dices: [parseInt(place1.innerText), parseInt(place2.innerText)]
+    };
+    rollHistory.push(roll);
+  }
+
+  function historyToJSON(){
+    const jsonString = JSON.stringify(rollHistory, null, 2);
+    alert(jsonString);
+  }
+</script>
+
+
+</body>
+</html>

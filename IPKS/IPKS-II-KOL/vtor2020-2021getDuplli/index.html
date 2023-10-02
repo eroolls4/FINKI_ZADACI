@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+  <style>
+    button{
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<textarea id="text">
+
+</textarea>
+<button onclick="draw()">DRAW</button>
+
+<div id="drawHere">
+
+</div>
+
+
+<script>
+
+
+  function draw(){
+    var getInput = document.getElementById("text").value
+    if(!getInput){
+      alert("please fill")
+      return ;
+    }
+    var lines = getInput.split("\n")
+    var colors = new Map()
+    //
+    // for (i = 0; i < lines.length; i++) {
+    //   var line = lines[i].trim()
+    //   if (line !== "") {
+    //     var lineColors = line.split(" ")
+    //     for (var j = 0; j < lineColors.length; j++) {
+    //       var color = lineColors[j].toLowerCase()
+    //       if (colors.contain(color)) {
+    //         colors[color]++
+    //       } else {
+    //         colors[color] = 1
+    //       }
+    //     }
+    //     console.log(colors)
+    //   }
+    // }
+
+    var colorsData=new Set()
+    lines.forEach(line => {
+      var trimmedLine = line.trim()
+      if (trimmedLine !== "") {
+        var colorsLine = trimmedLine.split(" ")
+        colorsLine.forEach(color => {
+          var col = color.toLowerCase()
+          if (colors.has(col)) {
+            colors.set(col, colors.get(col) + 1)
+          } else {
+            colors.set(col, 1)
+          }
+          colorsData.add(col)
+        })
+      }
+    })
+
+    var drawHere = document.getElementById("drawHere");
+    drawHere.innerHTML = ""; // Clear previous content
+    document.getElementById("text").value=""
+
+    var colorArray = Array.from(colorsData); // Convert Set to an array for iteration
+    var index = 0;
+
+    var interval = setInterval(() => {
+
+      if (index >= colorArray.length) {
+        clearInterval(interval);
+        return;
+      }
+
+      var colorText = document.createElement("div");
+      var color = colorArray[index];
+      colorText.textContent = color;
+      colorText.style.color = getRandomColor();
+      colorText.style.fontSize = `${colors.get(color) * 20}px`; // Adjust size based on frequency
+      colorText.style.position = "absolute";
+      // Calculate random positions within the drawHere element's boundaries
+      var maxX = drawHere.clientWidth - colorText.clientWidth;
+      var maxY = drawHere.clientHeight - colorText.clientHeight;
+
+      colorText.style.left = Math.random() * maxX + "px"; // Random horizontal position
+      colorText.style.top = Math.random() * maxY + "px"; // Random vertical position
+
+      colorText.style.transition = "all 1s"; // Add animation transition
+      drawHere.appendChild(colorText);
+
+      colorText.style.opacity = 1; // Fade in effect
+
+      index++;
+    }, 1000); // Delay between each interval
+  }
+
+  function getRandomColor() {
+    // Generate a random RGB color
+    var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    return `rgb(${r},${g},${b})`;
+  }
+
+
+</script>
+
+</body>
+</html>

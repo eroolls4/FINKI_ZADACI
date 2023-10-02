@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+  <style>
+    .newDiv{
+      float: left;
+      height: 50px;
+      width: 50px ;
+    }
+  </style>
+</head>
+<body>
+
+
+<p>Colors</p><input id="values"></input>
+<p>Delimiter</p><input id="delimiter"></input>
+<br/><br/>
+<input type="button" value="Draw" onclick="draw()"></input>
+<div id="addHere"></div>
+
+
+</div>
+
+
+<script>
+
+  function draw(){
+    var colors=document.getElementById("values").value
+    var delimiter=document.getElementById("delimiter").value
+
+    var where=document.getElementById("addHere")
+
+
+    var colorsArray=colors.split(delimiter)
+
+
+    colorsArray.forEach(color => {
+      newDiv=document.createElement("div")
+      newDiv.setAttribute("class","newDiv")
+      newDiv.setAttribute("onclick","remove(this)")
+      newDiv.style.backgroundColor=color
+      where.appendChild(newDiv)
+    })
+
+    // for(i=0;i<colorsArray.length;i++){
+    //
+    //   newDiv=document.createElement("div")
+    //   newDiv.setAttribute("class","newDiv")
+    //   newDiv.setAttribute("onclick","remove(this)")
+    //   newDiv.style.backgroundColor=colorsArray[i]
+    //   where.appendChild(newDiv)
+    //
+    // }
+  }
+
+  function remove(div) {
+    let parent = div.parentNode;
+    parent.removeChild(div);
+
+    var divS = Array.from(document.querySelectorAll('.newDiv'))
+                    .map(div => div.style.backgroundColor);
+
+
+    // var divS = Array.from(parent.childNodes)
+    //         .filter(node => node.classList && node.classList.contains('newDiv'))
+    //         .map(div => div.style.backgroundColor);
+
+   // console.log(divS)
+
+
+    document.getElementById("values").value = divS.join(',');
+
+    // var colorsArray = [];
+    // var divs = document.getElementsByClassName('newDiv');
+    // for (var i = 0; i < divs.length; i++) {
+    //   colorsArray.push(divs[i].style.backgroundColor);
+    // }
+    // document.getElementById("values").value = colorsArray.join(',');
+  }
+
+
+</script>
+
+</body>
+</html>

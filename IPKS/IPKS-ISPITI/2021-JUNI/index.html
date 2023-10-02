@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+
+        table ,tr,th,td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            opacity: 1;
+        }
+
+        #tables{
+            position: relative;
+            margin: auto;
+            width: 1030px;
+        }
+
+        #tables div{
+            position: absolute;
+        }
+
+        #tables div:nth-child(2){
+            right: 0;
+        }
+
+
+        #butonii {
+            margin-left: 520px;
+            margin-top: 40px;
+        }
+
+
+        #mainPart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #infoPart {
+            width: 650px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #genderDiv {
+            display: inline-block;
+            margin-left: 75px;
+        }
+
+
+        .a {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 300px;
+        }
+
+        #solutionPart {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        #solutionPart h3 {
+            text-align: center;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div id="mainPart">
+
+    <div id="inner">
+        <h3>VAKCINA.mk</h3>
+        <p>Inters for vakcina</p>
+
+        <div id="infoPart">
+
+            <div class="a">
+
+                <label>Ime: </label>
+                <input type="text" name="same" id="ime">
+
+            </div>
+            <div class="a">
+
+                <label>Prezime: </label>
+                <input type="text" name="same" id="prezime">
+
+            </div>
+
+            <div class="a">
+
+                <label>Maticen broj: </label>
+                <input type="text" name="same" id="maticen">
+
+            </div>
+
+            <div>
+
+                <label>Gender: </label>
+
+                <div id="genderDiv">
+
+                    <input type="radio" name="same" id="male">
+                    <label style="display:inline">Male</label>
+
+                    <input type="radio" name="same" id="female">
+                    <label style="display:inline">Female</label>
+                </div>
+
+
+            </div>
+
+            <div class="a">
+
+                <label>Years: </label>
+                <input type="text" name="same" id="godini">
+
+            </div>
+
+            <div class="a">
+
+                <label>Email: </label>
+                <input type="text" name="same" id="email">
+
+            </div>
+
+            <div class="a">
+
+                <label>Location: </label>
+
+                <select id="lokacija">
+                    <option></option>
+                    <option>Kumanovo</option>
+                    <option>Skopje</option>
+                    <option>Ohrid</option>
+                    <option>Pristina</option>
+                    <option>Prizren</option>
+                </select>
+
+            </div>
+        </div>
+
+        <button onclick="addUsers()" id="butonii">ADD USERS</button>
+    </div>
+</div>
+
+<div id="tables">
+    <div>
+        <h3>Пријавени малолетни граѓани</h3>
+        <table id="childTable">
+            <tr>
+                <th>Име</th>
+                <th>Презиме</th>
+                <th>Адреса</th>
+                <th>Локација</th>
+                <th>Статус</th>
+            </tr>
+
+
+            <tbody id="placeToPutUnder18">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h3>Пријавени полнолетни граѓани</h3>
+        <table id="adultTable">
+            <tr>
+                <th >Име</th>
+                <th>Презиме</th>
+                <th>Адреса</th>
+                <th>Локација</th>
+                <th>Статус</th>
+            </tr>
+
+            <tbody id="placeToPutAbove18">
+
+            </tbody>
+        </table>
+        <p><b>Вакцинирани:</b></p>
+        <ul id="placeForVakcinariniList">
+
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    var ime = document.getElementById("ime")
+    var prezime = document.getElementById("prezime")
+    var email = document.getElementById("email")
+    var godini = document.getElementById("godini")
+    var embg = document.getElementById("maticen")
+
+    var lokacija = document.getElementById("lokacija")
+    var male = document.getElementById("male")
+    var female = document.getElementById("female")
+
+
+    var placeToPutUnder18 = document.getElementById("under18")
+    var placeToPutAbove18 = document.getElementById("above18")
+    var placeForVakcinariniList = document.getElementById("ulPart")
+
+
+    // const unData = '[{"ime":"Angela","prezime":"Angelova","id":"1503996780019","pol":"1","godini":"25","email":"anchian@yahoo.com","lokacija":"Bitola"},' +
+    //     '{"ime":"Dimitar","prezime":"Dimitrov","id":"1204950490019","pol":"2","godini":"71","email":"dimitri@gmail.com","lokacija":"Skopje"}]';
+    //
+    // const dataParsed1 = JSON.parse(unData)
+
+
+    window.onload = function (){
+        let unData = '[{"ime":"Angela","prezime":"Angelova","id":"1503996780019","pol":"1","godini":"25","email":"anchian@yahoo.com","lokacija":"Bitola"},{"ime":"Dimitar","prezime":"Dimitrov","id":"1204950490019","pol":"2","godini":"71","email":"dimitri@gmail.com","lokacija":"Skopje"}]';
+        let data = JSON.parse(unData);
+
+        let tableData = "";
+        let color = "";
+        let table = document.getElementById("adultTable");
+
+        for(let i = 0; i < data.length; i++){
+            if(data[i].pol == "1"){
+                color = "red";
+            }else{
+                color = "blue";
+            }
+
+            tableData += `<tr style = "background-color:${color}">
+                    <td style="display: none;" class="maticen">${data[i].id}</td>
+                    <td>${data[i].ime}</td>
+                    <td>${data[i].prezime}</td>
+                    <td>${data[i].email}</td>
+                    <td class="lokacija">${data[i].lokacija}</td>
+                    <td><button onclick="vax(this);">Вакциниран</button></td>
+                </tr>`;
+
+        }
+        table.innerHTML += tableData;
+    }
+
+
+
+    function addUsers() {
+        const existingRowIndex = findExistingRowIndex(ime.value, embg.value);
+
+        if (ime.value === "" || prezime.value === "" || email.value === "" || godini.value === "" || embg.value === "" || lokacija.value === "" || (male.checked === "false" && female.checked === "false")) {
+            alert("please fill all inputs")
+            return;
+
+        }
+
+        if (!validEmbg(embg.value)) {
+            alert("please insert 13 digit and valid embg")
+            return;
+        }
+
+        if (!validateEmail(email.value)) {
+            alert("please insert valid email")
+            return;
+        }
+
+        function validEmbg(embg) {
+            return !isNaN(embg) && embg.length === 13
+        }
+
+        if (existingRowIndex !== -1) {
+            updateLocation(existingRowIndex);
+        } else {
+            if (parseInt(godini.value) > 18) {
+                if (male.checked === true) {
+                    generateRow("red", "false", "20");
+                } else {
+                    generateRow("blue", "false", "20");
+                }
+            } else {
+                if (male.checked === true) {
+                    generateRow("red", "true", "17");
+                } else {
+                    generateRow("blue", "true", "17");
+                }
+            }
+        }
+
+        function validateEmail(email) {
+            const chosenName = ime.value;
+            const [nameEmail, domain] = email.split("@");
+            const domainParts = domain.split(".");
+
+            if (domainParts.length !== 2 || (domainParts[0] !== "gmail" && domainParts[0] !== "yahoo")) {
+                return false;
+            }
+
+            if (chosenName !== nameEmail || domainParts[1] !== "com") {
+                return false;
+            }
+            return true;
+        }
+    }
+
+
+    function generateRow(color, buttonProperty, place) {
+        let redica = document.createElement("tr")
+        if (parseInt(place) > 18) {
+
+            redica.innerHTML = "<td>" + ime.value + "</td>" +
+                "<td>" + prezime.value + "</td>" +
+                "<td>" + email.value + "</td>" +
+                "<td>" + lokacija.value + "</td>" +
+                "<td><button class='stil' onclick='pkp(this)'>Vakciniran</button></td>"
+
+            redica.style.backgroundColor = color
+
+            placeToPutAbove18.appendChild(redica)
+        } else {
+            redica.innerHTML = "<td>" + ime.value + "</td>" +
+                "<td>" + prezime.value + "</td>" +
+                "<td>" + email.value + "</td>" +
+                "<td>" + lokacija.value + "</td>" +
+                "<td><button disabled='true' class='stil' onclick='pkp(this)'>Vakciniran</button></td>"
+
+            redica.style.backgroundColor = color
+
+            placeToPutUnder18.appendChild(redica)
+        }
+    }
+
+    function findExistingRowIndex(name, embg) {
+        const tableRows = document.querySelectorAll("#tableUnder18, #tableAbove18");
+        for (let i = 0; i < tableRows.length; i++) {
+            const rowChildren = tableRows[i].children;
+            if (rowChildren[0].textContent === name && rowChildren[2].textContent === embg) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function updateLocation(rowIndex) {
+        const tableRow = document.querySelectorAll("#tableUnder18 tr, #tableAbove18 tr")[rowIndex];
+        const rowChildren = tableRow.children;
+        rowChildren[3].textContent = lokacija.value;
+    }
+
+    function pkp(elem){
+        let tableRow = elem.parentNode.parentNode;
+        let tableRowChildren = tableRow.children;
+
+        let li = document.createElement("li")
+
+        let opacity = 1.0;
+        let id = setInterval(function(){
+            opacity -= 0.1;
+            tableRow.style.opacity = `${opacity}`;
+        },100);
+
+        setTimeout(function(){
+            clearInterval(id);
+            li.innerHTML = tableRowChildren[0].innerHTML + "   " + tableRowChildren[1].innerHTML
+            placeForVakcinariniList.append(li)
+            tableRow.parentNode.removeChild(tableRow)
+        },1000);
+    }
+
+
+    // function pkp(elementi) {
+    //     let parent = elementi.parentNode.parentNode
+    //     let parentChildren = parent.children
+    //
+    //     let li = document.createElement("li")
+    //
+    //     let opacity = 1.0
+    //
+    //     let id = setInterval(function () {
+    //         opacity--
+    //         parent.style.opacity = `${opacity}`
+    //     }, 100)
+    //
+    //     setTimeout(() => {
+    //         clearInterval(id)
+    //         li.innerHTML = parentChildren[1].innerHTML + parentChildren[2].innerHTML
+    //         parent.removeChild(elementi)
+    //         placeForVakcinariniList.appendChild(li)
+    //     }, 1000)
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

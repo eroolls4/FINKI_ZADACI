@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+
+        .n {
+            margin-right: 5px;
+            display: inline-block;
+        }
+    </style>
+
+
+</head>
+<body>
+<div id="generateHere">
+
+</div>
+
+<input type="text" id="getInput">
+<button onclick="provo()" id="butoni">CHHEKKKKKK</button>
+<p>Time left <span id="timeleft">0</span> seconds</p>
+
+
+<script>
+    var time = 60;
+    var placeForGenerating = document.getElementById("generateHere");
+
+
+    var timerInterval = setInterval(decreaseTime, 1000)
+
+    function decreaseTime() {
+        let where = document.getElementById("timeleft")
+        where.innerHTML = time--;
+
+
+        if (time < 0) {
+            document.getElementById("butoni").disabled = true
+            clearInterval(timerInterval)
+
+        }
+    }
+
+    let lastThreeDigitNumber;
+
+
+    generateAndAppendNumbers(0, 9, 2);
+    generateAndAppendNumbers(10, 99, 2);
+    generateAndAppendNumbers(100, 999, 2);
+
+
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function generateAndAppendNumbers(min, max, count) {
+        for (let i = 0; i < count; i++) {
+            const randomNumber = generateRandomNumber(min, max);
+            const newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "n");
+            newDiv.textContent = randomNumber;
+            placeForGenerating.append(newDiv);
+
+            if (randomNumber >= 100 && randomNumber <= 999) {
+                lastThreeDigitNumber = randomNumber;
+            }
+        }
+    }
+
+    function provo() {
+        let inputTxt = document.getElementById("getInput").value
+        const res = eval(inputTxt)
+
+        if (res === lastThreeDigitNumber) {
+            document.getElementById("butoni").disabled = true
+            alert("CORRECT")
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

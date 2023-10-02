@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <style>
+
+        #sectionPART {
+            float: right;
+            margin-right: 200px;
+            margin-top: -7px;
+        }
+
+        .b {
+            display: block;
+        }
+
+
+        .a {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 10px;
+        }
+
+
+        table, tr, th, td {
+            border: black 1px solid;
+            border-collapse: collapse;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #inner0 {
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="firstPart">
+    <h2>KARGO SYSTEM</h2>
+
+
+    <div id="inner0">
+        <div class="a">
+            <label>ADRESS OF SENDER:</label>
+            <input type="text" id="sender">
+        </div>
+
+        <div class="a">
+
+            <label>RECIEVER:</label>
+            <input type="text" id="receiver">
+
+        </div>
+
+        <div class="a">
+            <label>TEZHINA NA PRATKA:</label>
+            <input type="text" id="tezina">
+
+
+        </div>
+
+        <div class="a">
+
+            <label>NACIN NA PLAKANJE:</label>
+            <div id="nacin">
+                <label>Prakjanje</label>
+                <input type="radio" id="prakjanje" name="same">
+                <label>Primanje</label>
+                <input type="radio" id="primanje" name="same">
+
+            </div>
+
+        </div>
+
+        <div class="a">
+
+            <label>ID:</label>
+            <input type="text" id="id">
+
+        </div>
+    </div>
+    <button onclick="delivery()">VNESI</button>
+
+
+    <div id="secondPart">
+
+
+        <div id="sectionPART">
+            <section>
+                <h4>OTKAZENI NARACKI</h4>
+
+                <ul id="listHERE">
+
+                </ul>
+
+
+            </section>
+        </div>
+        <h2>Vneseni pratki</h2>
+        <h4>TOTAL SUM: <span id="suma">0</span></h4>
+        <div id="tableHere">
+            <table id="tabllica">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>SENDER</th>
+                    <th>RECIEVER</th>
+                    <th>CENA</th>
+                    <th>AKCII</th>
+                </tr>
+
+                </thead>
+
+                <tbody id="addFORTABLE">
+
+                </tbody>
+
+
+            </table>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    const d = '[{"address_from":"Partizanska 1", "address_to":"Kliment Ohridski 15", "weight":"3.5", "paid_type":"on_send", "ID":"Id902 90sUsdql3", "delivery": "on_hold"},' +
+        '{"address_from":"Ruzveltova 3", "address_to":"3MUB 43", "weight":"15", "paid_type":"on_receive", "ID":"W8902 90sWmPqLzl3", "delivery": "false"}]'
+    const p = JSON.parse(d)
+
+    var totalSUM = 0;
+
+    var addressFrom = document.getElementById("sender")
+    var addressTo = document.getElementById("receiver")
+    var weight = document.getElementById("tezina")
+    var ID = document.getElementById("id")
+    var soPrakanje = document.getElementById("prakjanje")
+    var soPrimanje = document.getElementById("primanje")
+
+
+    var placeROWS = document.getElementById("addFORTABLE")
+
+
+    var IDs = new Set()
+
+
+    window.onload = (() => {
+        for (i = 0; i < p.length; i++) {
+          let newTABLEROW = document.createElement("tr")
+          let newID = changeID(p[i].ID)
+            let price = calcPrice(parseInt(p[i].weight))
+            newTABLEROW.innerHTML = "<td>" + newID + "</td>" +
+                "<td>" + p[i].address_from + "</td>" +
+                "<td>" + p[i].address_to + "</td>" +
+                "<td>" + price + "</td>" +
+                "<td><button class='b' onclick='dostavi(this)'>DOSTAVENO</button><button class='b' onclick='otkazhi(this)'>OTKAZENO</button></td>"
+            placeROWS.append(newTABLEROW)
+        }
+    })
+
+
+    function delivery() {
+
+        if (IDs.has(ID.value)) {
+            alert("ID EXISTS")
+            return;
+        } else {
+          let newTABLEROW = document.createElement("tr")
+
+            let newID = changeID(ID.value)
+          console.log(newID)
+            let price = calcPrice(parseInt(weight.value))
+            newTABLEROW.innerHTML = "<td>" + newID + "</td>" +
+                    "<td>" + addressFrom.value + "</td>" +
+                    "<td>" + addressTo.value + "</td>" +
+                    "<td>" + price + "</td>" +
+                    "<td><button class='b' onclick='dostavi(this)'>DOSTAVENO</button><button class='b' onclick='otkazhi(this)'>OTKAZENO</button></td>"
+            placeROWS.append(newTABLEROW)
+
+        }
+        IDs.add(ID.value)
+    }
+
+    function calcPrice(weight) {
+        return weight < 5 ? 500 : 1200
+    }
+
+    function changeID(id) {
+        let tmp=id.split(" ").join("-")
+        let modifiedID = tmp.split("").map(ch => {
+            if (ch === ch.toUpperCase()) {
+                return ch.toLowerCase();
+            } else if (ch === ch.toLowerCase()) {
+                return ch.toUpperCase();
+            }
+            return ch;
+        }).join("");
+        return modifiedID;
+    }
+
+
+    function dostavi(btn) {
+        let incrementSUM = document.getElementById("suma")
+        let par = btn.parentNode.parentNode
+
+        par.style.backgroundColor = "lightgreen"
+
+        btn.disabled = true
+        btn.nextElementSibling.disabled = true
+
+        totalSUM += parseInt(par.children[3].textContent)
+        incrementSUM.innerHTML = totalSUM
+    }
+
+    function otkazhi(btn) {
+        let par = btn.parentNode.parentNode
+        let otkazeniPART = document.getElementById("listHERE")
+        let li = document.createElement("li")
+
+        let o = 1.0
+
+        let animA = setInterval(() => {
+            o -= 0.1
+            par.style.opacity = o;
+        }, 100)
+
+
+        setTimeout(() => {
+            clearInterval(animA)
+            placeROWS.removeChild(par)
+            li.innerHTML = par.children[0].textContent
+            otkazeniPART.append(li)
+        }, 1000)
+
+    }
+
+</script>
+
+</body>
+</html>

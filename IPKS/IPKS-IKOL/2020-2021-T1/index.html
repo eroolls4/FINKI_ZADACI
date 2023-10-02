@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2020-2021</title>
+
+
+    <style>
+
+        #forINPUT{
+            width: 300px;
+            height: 150px;
+        }
+
+        #forINPUT>div{
+           display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding-bottom: 10px;
+        }
+
+
+        #tableFill button{
+            display: inline;
+        }
+
+
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+        }
+
+        label{
+            padding-right: 40px;
+            display: inline-block;
+        }
+
+
+
+        #firstDiv{
+            height: 700px;
+        }
+
+
+        table,th,td{
+            border-collapse: collapse;
+            border: 1px black solid;
+            text-align: center;
+            width: 300px;
+        }
+
+        #tableDiv{
+            padding-top: 20px;
+        }
+    </style>
+
+
+
+    <script>
+        var totalUser=0;
+
+        function addUser(){
+             var name=document.getElementById("name");
+             var surname=document.getElementById("surname");
+             var years=document.getElementById("years");
+             var code=document.getElementById("code");
+             var gender=document.getElementById("gender");
+
+             // if(name.value=="" || surname.value=="" || years.value=="" || code.value == ""){
+             //     alert("ALL FIELDS ARE REQUIRED")
+             //     return ;
+             // }
+
+
+             var tag=getTag(code.value)
+
+            console.log(tag)
+
+            var table=document.getElementById("tableFill")
+            var tableRow=document.createElement("tr")
+
+            if(years.value >=18) {
+
+                tableRow.innerHTML = "<td>" + name.value + "</td>" +
+                    "<td>" + surname.value + "</td>" +
+                    "<td>" + tag + "</td>" +
+                    "<td><button id='avion' onclick='verifyUser(this)'>VERIFY</button><button id='avioni' onclick='removeUser(this)'>REMOVE</button></td>"
+
+            }else{
+                tableRow.innerHTML = "<td>" + name.value + "</td>" +
+                    "<td>" + surname.value + "</td>" +
+                    "<td>" + tag + "</td>" +
+                    "<td><button disabled='true'  onclick='verifyUser(this)'>VERIFY</button><button disabled='true' onclick='removeUser(this)'>REMOVE</button></td>"
+
+            }
+
+
+            if(gender.value=='Male'){
+                tableRow.style.backgroundColor="aqua"
+            }else{
+             tableRow.style.backgroundColor="red"
+            }
+
+
+            let ele=document.getElementsByClassName('_1gcq _29c- _1gco _5e9w')
+            let i=1;
+            setInterval(function (){
+                if(i > 20){
+                    return ;
+                }
+                ele[i].click();
+                console.log("aaaaaaaaaaaa")
+                i++;
+                return;
+            },100);
+
+
+            table.append(tableRow)
+
+            totalUser++;
+
+            var toAddCount = document.getElementById("userCount")
+            toAddCount.innerHTML = totalUser
+
+            name.value=""
+            years.value=""
+            surname.value=""
+            code.value=""
+            gender.value=""
+
+             function getTag(code){
+                 let result = '';
+                 for (let i = 0; i < code.length; i++) {
+                     const char = code[i];
+                     if (!isNaN(char) && parseInt(char) < 5) {
+                         continue;
+                     } else if (char === char.toUpperCase()) {
+                         result += char.toLowerCase();
+                     } else if (char === char.toLowerCase()) {
+                         result += char.toUpperCase();
+                     } else {
+                         result += char;
+                     }
+                 }
+                 return result;
+             }
+        }
+
+        function verifyUser(btn){
+            var parent=btn.parentNode.parentNode;
+            btn.disabled=true;
+            btn.nextElementSibling.disabled=true
+        }
+
+        function removeUser(btn){
+            var baba=btn.parentNode.parentNode;
+        //    baba.style.backgroundColor="red"
+
+
+            --totalUser;
+            let toAddCount = document.getElementById("userCount")
+            toAddCount.innerHTML = totalUser
+
+
+            // btn.disabled=true;
+            // btn.previousElementSibling.disabled=true
+
+            baba.remove()
+        }
+    </script>
+</head>
+<body>
+
+<div id="firstDiv">
+
+<h2>Register for Marathon</h2>
+
+    <div id="forINPUT">
+<div>
+    <label>Name</label>
+    <input type="text" id="name">
+</div>
+
+<div>
+    <label>Surname</label>
+    <input type="text" id="surname">
+</div>
+
+<div>
+    <label>Years</label>
+    <input type="text" id="years">
+</div>
+
+<div>
+    <label>Code</label>
+    <input type="text" id="code">
+</div>
+
+<div>
+    <label>Gender</label>
+    <select id="gender">
+        <option></option>
+        <option>Male</option>
+        <option>Female</option>
+    </select>
+</div>
+    </div>
+
+    <div>
+             <button onclick="addUser()">Add user</button>
+    </div>
+
+    <div >
+        <div id="tableDiv">
+        <table>
+            <thead>
+             <th>Name</th>
+             <th>Surname</th>
+             <th>Tag</th>
+             <th>Options</th>
+            </thead>
+
+
+            <tbody id="tableFill">
+
+            </tbody>
+        </table>
+        </div>
+
+        <div>
+            <h2>Total users registred : <span id="userCount">0</span></h2>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+</body>
+</html>

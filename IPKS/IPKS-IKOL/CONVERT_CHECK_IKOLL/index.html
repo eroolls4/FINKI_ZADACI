@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<style>
+
+</style>
+
+<body>
+
+<div>
+    <input type="text" id="input">
+    <button onclick="shiftLeft()" name="same" id="shiftLeft"><</button>
+    <button onclick="shiftRight()" name="same" id="shiftRight">></button>
+    <button onclick="convert()" name="same" id="con">CONVERT</button>
+    <button onclick="storeRes()" name="same" id="st">STORE</button>
+    <button onclick="checkRes()" name="same" id="checkk">CHECK</button>
+
+    <ul id="saveResult">
+
+    </ul>
+</div>
+
+<script>
+    var saveResult = document.getElementById("saveResult");
+    var getInput = document.getElementById("input");
+    var input = getInput.value;
+
+    function validateInput() {
+        if (isNaN(getInput.value)) {
+            alert("PLEASE ENTER A NUMBER");
+            return false;
+        }
+        if (getInput.value.length !== 10) {
+            alert("WRITE 10 DIGIT NUMBER");
+            return false;
+        }
+        return true;
+    }
+
+    function shiftLeft() {
+        if (!validateInput()) return;
+
+
+        let inputString = getInput.value.toString();
+        let shiftedString = inputString.substring(2) + inputString.substring(0, 2);
+
+        getInput.value = shiftedString; // Update the input field value
+    }
+
+    function shiftRight() {
+        if (!validateInput()) return;
+
+        check(getInput.value);
+
+        let inputString = getInput.value.toString();
+        let shiftedString = inputString.substring(inputString.length - 2) + inputString.substring(0, inputString.length - 2);
+
+        getInput.value = shiftedString; // Update the input field value
+    }
+
+    function convert() {
+        if (!validateInput()) return;
+
+        let inputString = getInput.value.toString();
+        let convertedString = "";
+
+        for (let i = 0; i < inputString.length; i++) {
+            let digit = parseInt(inputString.charAt(i));
+            let convertedDigit = digit - 2;
+
+            if (convertedDigit < 0) {
+                convertedDigit += 10;
+            }
+            convertedString += convertedDigit.toString();
+        }
+
+        getInput.value = convertedString;
+    }
+
+    function storeRes() {
+        if (!validateInput()) return;
+
+        check(getInput.value);
+        var el = document.createElement("li");
+        var place = document.getElementById("saveResult");
+
+        el.innerHTML = getInput.value;
+        place.appendChild(el);
+        getInput.value = "";
+    }
+
+    function checkRes() {
+        if (!validateInput()) return;
+
+        let inputString = getInput.value.toString();
+        let counter = 0;
+        for (i = 0; i < inputString.length; i++) {
+            let digit = parseInt(inputString.charAt(i));
+            if (digit % 3 === 0) {
+                counter++;
+            }
+            if (counter === 3) {
+                break;
+            }
+        }
+        if (counter >= 3) {
+            alert("YES");
+        }
+    }
+</script>
+</body>
+</html>

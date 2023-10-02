@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Reservation</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+
+</head>
+<body>
+<label for="from">Od</label>
+<input type="date" value="2021-08-27" id="from">
+
+<label for="to">Do</label>
+<input type="date" value="2021-08-27" id="to">
+
+<label for="rooms">Broj na sobi</label>
+<input type="number" id="rooms"  min="1" value="1">
+
+<button onclick="searchForHotel()">Prebaraj</button>
+
+<table id="tabela">
+    <thead>
+    <tr>
+        <th>Ime</th>
+        <th>Od</th>
+        <th>Do</th>
+        <th>Sobi</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody id="tuka">
+
+    </tbody>
+</table>
+
+
+
+<script>
+    const dataJSON = '[{"hoteli":[{"ime":"Monastero","od":"31.8.2021","do":"11.9.2021","sobi":3},' +
+        '{"ime":"Hotel 71","od":"1.9.2021","do":"3.9.2021","sobi":1},' +
+        '{"ime":"RAAS Jodhpur","od":"28.8.2021","do":"10.10.2021","sobi":10},' +
+        '{"ime":"Archer Hotel ","od":"1.8.2021","do":"1.10.2021","sobi":0},' +
+        '{"ime":"The Langham Huntington","od":"3.8.2021","do":"3.9.2021","sobi":5}]}' +
+        ']';
+
+    const parsedData = JSON.parse(dataJSON);
+
+
+
+    var placeForAddingRow=document.getElementById("tuka")
+
+    var getFromInput=document.getElementById("from")
+    var getToInput=document.getElementById("to")
+    var roomsQuantity=document.getElementById("rooms")
+
+
+    function checkForHotels(wantedFromDay, wantedFromMonth, wantedFromYear, wantedToDay, wantedToMonth, wantedToYear,wantedRooms) {
+        for(x=0;x<parsedData.length;x++){
+            for(j=0;j<parsedData[x].hoteli.length;j++){
+                var hotelName=parsedData[x].hoteli[j].ime
+                var fromDateHotel=parsedData[x].hoteli[j].od
+                var toDateHotel=parsedData[x].hoteli[j].do
+                var roomQuantityHotel=parseInt(parsedData[x].hoteli[j].sobi)
+
+                var hotelFromDateParts = fromDateHotel.split(".")
+                var hotelToDateParts = toDateHotel.split(".")
+
+                var hotelFromDay=parseInt(hotelFromDateParts[0])
+                var hotelFromMonth=parseInt(hotelFromDateParts[1])
+                var hotelFromYear=parseInt(hotelFromDateParts[2])
+
+                var hotelToDay=parseInt(hotelToDateParts[0])
+                var hotelToMonth=parseInt(hotelToDateParts[1])
+                var hotelToYear=parseInt(hotelToDateParts[2])
+
+
+                const overlaps =
+                    (wantedFromYear < hotelToYear || (wantedFromYear === hotelToYear && wantedFromMonth <= hotelToMonth))
+                    &&
+                    (wantedToYear > hotelFromYear || (wantedToYear === hotelFromYear && wantedToMonth >= hotelFromMonth));
+
+
+                const enoughRooms = roomQuantityHotel >= wantedRooms;
+
+                if (overlaps && enoughRooms){
+                    let newROW=document.createElement("tr")
+                    newROW.innerHTML="<td>" + hotelName + "</td>" +
+                                     "<td>" + fromDateHotel + "</td>" +
+                                     "<td>" + toDateHotel + "</td>" +
+                                     "<td>" + roomQuantityHotel + "</td>" +
+                                     "<td><button onclick='revervirajHotel(this)'>REZERVIRAJ</button></td>"
+
+                    placeForAddingRow.append(newROW)
+                }
+            }
+        }
+
+    }
+
+
+    function revervirajHotel(btn){
+        let parent=btn.parentNode.parentNode
+        parent.style.backgroundColor="lightgreen"
+
+        let currBr=parent.children[3].textContent
+        parent.children[3].textContent=currBr - roomsQuantity.value
+
+        btn.disabled=true
+
+    }
+
+    function searchForHotel(){
+        let fromParts=getFromInput.value.split("-")
+        let toParts=getToInput.value.split("-")
+        let wantedRooms=parseInt(roomsQuantity.value)
+
+          let wantedFromDay=parseInt(fromParts[2])
+          let wantedFromMonth=parseInt(fromParts[1])
+          let wantedFromYear=parseInt(fromParts[0])
+
+          let wantedToDay=parseInt(toParts[2])
+          let wantedToMonth=parseInt(toParts[1])
+          let wantedToYear=parseInt(toParts[0])
+        
+        
+        checkForHotels(wantedFromDay,wantedFromMonth,wantedFromYear,wantedToDay,wantedToMonth,wantedToYear,wantedRooms)
+    }
+
+
+
+</script>
+</body>
+</html>

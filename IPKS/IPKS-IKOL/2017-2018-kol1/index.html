@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2017-2018 KOL-I</title>
+
+  <style>
+    div{
+      padding: 10px;
+    }
+    label{
+      display: inline-block;
+      width: 100px;
+    }
+
+    #revert {
+      position: absolute;
+      left: 500px;
+      top: 90px;
+    }
+
+    table,th,td
+    {
+      border: 1px solid black;
+      border-collapse: collapse;
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    var counter=0;
+    var sumOceni=0
+
+    function importStudent(){
+      var ime = document.getElementById("name");
+      var index = document.getElementById("index");
+      var telefon = document.getElementById("phone");
+      var grade5 = document.getElementById("five");
+      var grade6 = document.getElementById("six");
+      var grade7 = document.getElementById("seven");
+      var grade8 = document.getElementById("eight");
+      var grade9= document.getElementById("nine");
+      var grade10= document.getElementById("ten");
+      var sesija= document.getElementById("sesija");
+
+      if(ime.value == "" || index.value== "" || telefon.value == "" || sesija=="" || (grade5.checked==false && grade6.checked==false && grade7.checked==false && grade8.checked==false && grade9.checked==false && grade10.checked==false)){
+        alert("PLEASE WRITE VALID VALUES")
+        return ;
+      }
+
+     var phoneNr=formatPhone(telefon.value)
+
+     // console.log(phoneNr)
+
+      if(phoneNr==false){
+        alert("nevaliden")
+        return ;
+      }
+
+      var tabela=document.getElementById("here")
+      var redica=document.createElement("tr")
+      var grade=1
+
+      if(grade5.checked ===true){
+        grade=5
+      }else if(grade6.checked ===true){
+        grade=6;
+      }else if(grade7.checked ===true){
+        grade=7
+      }else if(grade8.checked ===true){
+        grade=8;
+      }else if(grade9.checked ===true){
+        grade=9;
+      }else{
+        grade=10;
+      }
+
+      redica.innerHTML = "<td>" + ime.value + "</td>" +
+                         "<td>" + index.value + "</td>" +
+                         "<td>" + phoneNr + "</td>" +
+                         "<td>" + grade + "</td>" +
+                         "<td>" + sesija.value + "</td>" +
+                         "<td><button class='stil' onclick='potvrda(this)'>Confirm</button><button class='stil' onclick='svrti(this)'>Revert</button></td>"
+
+
+      tabela.append(redica)
+
+      var r1=redica.children[3].innerHTML;
+      var ocenka=parseInt(r1)
+
+      counter++;
+      sumOceni +=ocenka
+
+      var tmpAvg = sumOceni / counter
+      var avg = tmpAvg.toFixed(1)
+
+
+
+      var putAvg = document.getElementById('average')
+      putAvg.innerHTML = avg;
+
+
+
+      function formatPhone(phone)
+      {
+        var counter = 0
+        var prvdel = ""
+        var vtordel = ""
+        var tretdel = ""
+        var build = ""
+        var regex = /[a-zA-Z]+/
+        if(regex.test(phone))
+        {
+          return false;
+        }
+        if(phone.length != 9)
+        {
+          return false;
+        }
+        else
+        {
+          for(i=0;i<phone.length;i++)
+          {
+            if(!isNaN(phone[i]))
+            {
+              counter++
+              build += phone[i]
+              if(counter===3)
+              {
+                prvdel = build + "/"
+                build = ""
+              }
+              if(counter===6)
+              {
+                vtordel = build + "-"
+                build = ""
+              }
+              if(counter===9)
+              {
+                tretdel = build
+                build = ""
+              }
+            }
+          }
+          var final = prvdel+vtordel+tretdel
+        }
+        if(final==="")
+        {
+          return false
+        }
+        return final
+      }
+    }
+
+    function potvrda(btn){
+      var parent=btn.parentNode.parentNode
+      parent.style.backgroundColor="lightgreen"
+      btn.disabled=true;
+      btn.nextElementSibling.disabled=true
+    }
+
+
+
+    function svrti(btn){
+      let baba = btn.parentNode.parentNode //get the complete tr data the entire row????
+      var lista = document.getElementById("history")
+      var listaElement = document.createElement("li")
+
+
+      let indx = baba.children[1].innerHTML
+      let nota = baba.children[3].innerHTML
+
+      // console.log(indx)
+      // console.log(nota)
+      listaElement.innerHTML = indx + " " + "-" + " " +  "grade : " + " " + nota
+
+      lista.append(listaElement);
+
+      let r1 = baba.children[3].innerHTML;
+      let ocenka = parseInt(r1)
+
+      counter--;
+      sumOceni -= ocenka
+
+      let tmpAvg = sumOceni / counter
+      let avg = tmpAvg.toFixed(1)
+
+   //   console.log(avg)
+
+      let putAvg = document.getElementById('average')
+
+      putAvg.innerHTML = avg;
+      baba.remove();
+    }
+
+
+  </script>
+</head>
+<body>
+
+
+<div>
+<h1>Details</h1>
+  <div>
+    <label>Name</label>
+    <input type="text" id="name">
+  </div>
+ <div>
+    <label>Index</label>
+    <input type="text" id="index">
+  </div>
+ <div>
+    <label>Phone</label>
+    <input type="text" id="phone">
+  </div>
+
+  <div>
+    <label>Grade</label>
+
+    <input type="radio" name="same" id="five">
+    <label style="display:inline">5</label>
+
+    <input type="radio" name="same" id="six">
+    <label style="display:inline">6</label>
+
+    <input type="radio" name="same" id="seven">
+    <label style="display:inline">7</label>
+
+    <input type="radio" name="same" id="eight">
+    <label style="display:inline">8</label>
+
+    <input type="radio" name="same" id="nine">
+    <label style="display:inline">8</label>
+
+    <input type="radio" name="same" id="ten">
+    <label style="display:inline">10</label>
+
+  </div>
+  
+  <div>
+    <label>Session</label>
+
+    <select id="sesija">
+      <option></option>
+      <option>January</option>
+      <option>June</option>
+      <option>September</option>
+    </select>
+  </div>
+
+  <div>
+    <button onclick="importStudent()">Import Student</button>
+  </div>
+
+</div>
+
+<h2>Students (average grade: <span  id="average">0</span>)</h2>
+
+
+<table>
+  <thead>
+
+  <th>Name</th>
+   <th>Index</th>
+   <th>Phone</th>
+   <th>Grade</th>
+   <th>Session</th>
+   <th>Actions</th>
+
+  </thead>
+
+  <tbody id="here">
+
+  </tbody>
+</table>
+
+
+<section id="revert">
+
+  <h2>Revert History</h2>
+  <ul id="history">
+
+  </ul>
+
+</section>
+
+</body>
+</html>

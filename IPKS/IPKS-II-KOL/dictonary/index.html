@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+  <style>
+    .newP
+    {
+      padding-right: 5px;
+      display:inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<div id="words">
+
+
+</div>
+
+<div>
+
+  <input type="text" id="getInput">
+  <button onclick="proveri()" id="butoni">CHECK</button>
+
+</div>
+
+<div id="timeLeft">
+  <p>Time left <span id="time">0</span> seconds.Points: <span id="points">0</span></p>
+</div>
+
+
+<script>
+
+  const letters=["A","б", "В", "Љ", "Њ", "Е", "Р", "Т" ,"Ѕ" ,"У" ,"И", "О" ,"П" ,"Л" ,"К" ,"Ч" ,"Ќ" ,"Ш" ,"Ѓ" ,"М" ,"Н" ,"Ц" ,"Џ" ,"З" ,"С" ,"Д" ,"Ф" ,"Г" ,"Х" ,"Ј", "К" ]
+  const data='["јас","ти","тој","таа","тоа" ,"ние","вие" ,"тие"]'
+  var dataParsed=JSON.parse(data)
+
+  var wordsPlace=document.getElementById("words")
+
+  var points=0;
+  var time=60;
+
+
+
+  for(i=0;i<10;i++){
+    const randomIndex=Math.floor(Math.random() * letters.length)
+    var randomLetter=letters[randomIndex]
+
+   // console.log(randomLetter)
+
+    var newElement=document.createElement("div")
+    newElement.setAttribute("class","newP")
+    newElement.setAttribute("onclick","drag(this)")
+    newElement.innerText=randomLetter
+    wordsPlace.append(newElement)
+
+  }
+
+  function updateTimer() {
+    var timeSpan = document.getElementById("time");
+    timeSpan.innerText = time;
+    time--;
+
+    if (time < 0) {
+      clearInterval(timerInterval);
+      alert("POINTS ACHIEVED: "+ points)
+      document.getElementById("butoni").disabled = true; // Disable the check button
+    }
+  }
+
+  var timerInterval = setInterval(updateTimer, 1000);
+
+  function drag(elem){
+    // alert("hiii")
+    var inputTxt = document.getElementById("getInput");
+    inputTxt.value += elem.innerText; // Set the value to the inner text of the element
+    elem.parentNode.removeChild(elem);
+  }
+
+
+  function proveri() {
+    let getWords = document.getElementById("getInput").value.toLowerCase()
+    // console.log(getWords)
+    for (i = 0; i <dataParsed.length; i++) {
+      if (dataParsed[i] === getWords) {
+        ++points
+        pointsVal = document.getElementById("points")
+        pointsVal.innerHTML = points
+        document.getElementById("getInput").value = "";
+        //getWords="" wrongg!!!
+      }
+    }
+  }
+  document.getElementById("getInput").value = "";
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+
+
+<!--  <style>-->
+<!--    table,th,td{-->
+<!--      border: black 1px solid;-->
+<!--      border-collapse: collapse;-->
+<!--      text-align: center;-->
+<!--      padding: 5px;-->
+<!--    }-->
+
+<!--    #tablle{-->
+<!--      margin-top: 30px;-->
+<!--    }-->
+
+
+<!--  </style>-->
+<!--</head>-->
+<!--<body style="background-color: #8e44ad">-->
+
+<!--<div id="part">-->
+<!--  <label>Get: </label> <input style="width: 50px" type="number" min="1" id="quantity">-->
+<!--  <label>Genre: </label>-->
+<!--  <select id="genre">-->
+<!--    <option>all</option>-->
+<!--  </select>-->
+<!--  <button style="margin-left: 20px" onclick="mix()">MIX</button>-->
+<!--</div>-->
+
+
+
+<!--<div id="sol">-->
+<!--  <table id="tablle">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>ID</th>-->
+<!--      <th>ARTIST</th>-->
+<!--      <th>GENRE</th>-->
+<!--      <th>RELEASE-YEAR</th>-->
+<!--      <th>MOVE</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="addTABLLE">-->
+
+<!--    </tbody>-->
+<!--  </table>-->
+<!--</div>-->
+
+
+
+<!--<script>-->
+<!--  var data = '[{"artist":"Marc", "title":"TheWorks", "genre":"Pop", "releaseYear":"2022"}, ' +-->
+<!--             '{"artist":"James", "title":"Jinx", "genre":"Rock", "releaseYear":"2021"},' +-->
+<!--             '{"artist":"Jayne", "title":"Roll", "genre":"Blues", "releaseYear":"2023"},' +-->
+<!--             '{"artist":"Alfie", "title":"MegaGiga", "genre":"Pop", "releaseYear":"2019"},' +-->
+<!--             '{"artist":"Rick", "title":"Extract", "genre":"Rock", "releaseYear":"2028"},' +-->
+<!--             '{"artist":"William", "title":"Extract", "genre":"Blues", "releaseYear":"2026"}]'-->
+
+<!--  var pD=JSON.parse(data)-->
+<!--  var placeToADDGenre=document.getElementById("genre")-->
+<!--  var musicsByGenre=new Map()-->
+<!-- var placeToAddTable=document.getElementById("addTABLLE")-->
+
+
+
+<!--  window.onload= ( () =>{-->
+<!--    var genres=new Set()-->
+
+<!--    for(i=0;i<pD.length;i++){-->
+<!--      genres.add(pD[i].genre)-->
+
+<!--      if (!musicsByGenre.has(pD[i].genre)) {-->
+<!--        musicsByGenre.set(pD[i].genre,[]);-->
+<!--      }-->
+<!--      musicsByGenre.get(pD[i].genre).push(pD[i]);-->
+<!--    }-->
+<!--    console.log(musicsByGenre)-->
+<!--    genres.forEach(genre =>{-->
+<!--      let option=document.createElement("option")-->
+<!--      option.innerHTML=genre-->
+<!--      placeToADDGenre.append(option)-->
+<!--    })-->
+<!--  })-->
+
+
+<!--  var getQuantity=document.getElementById("quantity")-->
+<!--  var getGenre=document.getElementById("genre")-->
+
+
+
+
+<!--  function mix() {-->
+<!--    var arr = Array.from(musicsByGenre.values())-->
+
+<!--    if (getGenre.value === "all") {-->
+<!--      if (getQuantity.value > musicsByGenre.size) { //show all-->
+<!--        arr.forEach(musicArray => {-->
+<!--          musicArray.forEach(music => {-->
+<!--            let tableROW = document.createElement("tr");-->
+
+<!--            tableROW.innerHTML = "<td>" + getID(music.title, music.artist) + "</td>" +-->
+<!--                    "<td>" + music.artist + "</td>" +-->
+<!--                    "<td>" + music.genre + "</td>" +-->
+<!--                    "<td>" + music.releaseYear + "</td>" +-->
+<!--                    "<td><button onclick='moveUp(this)'>MOVE UP</button><button onclick='moveDown(this)'>MOVE DOWN</button></td>";-->
+
+<!--            placeToAddTable.append(tableROW);-->
+<!--          });-->
+<!--        });-->
+<!--      } else { //show n-->
+<!--        let musicCount = 0;-->
+<!--        arr.forEach(musicArray => {-->
+<!--          musicArray.forEach(music => {-->
+<!--            if (musicCount < getQuantity.value) {-->
+<!--              let tableROW = document.createElement("tr");-->
+
+<!--              tableROW.innerHTML = "<td>" + getID(music.title, music.artist) + "</td>" +-->
+<!--                      "<td>" + music.artist + "</td>" +-->
+<!--                      "<td>" + music.genre + "</td>" +-->
+<!--                      "<td>" + music.releaseYear + "</td>" +-->
+<!--                      "<td><button onclick='moveUp(this)'>MOVE UP</button><button onclick='moveDown(this)'>MOVE DOWN</button></td>";-->
+
+<!--              placeToAddTable.append(tableROW);-->
+<!--              musicCount++;-->
+<!--            }-->
+<!--          });-->
+<!--        });-->
+<!--      }-->
+<!--    } else {-->
+<!--      var choosen = Array.from(musicsByGenre.get(getGenre.value))-->
+<!--      if (getQuantity.value > choosen.length) { //show all-->
+<!--        choosen.forEach(music => {-->
+<!--          let tableROW = document.createElement("tr");-->
+
+<!--          tableROW.innerHTML = "<td>" + getID(music.title, music.artist) + "</td>" +-->
+<!--                  "<td>" + music.artist + "</td>" +-->
+<!--                  "<td>" + music.genre + "</td>" +-->
+<!--                  "<td>" + music.releaseYear + "</td>" +-->
+<!--                  "<td><button onclick='moveUp(this)'>MOVE UP</button><button onclick='moveDown(this)'>MOVE DOWN</button></td>";-->
+
+<!--          placeToAddTable.append(tableROW);-->
+<!--        });-->
+<!--      } else { //show n-->
+<!--        let musicCount = 0;-->
+<!--        choosen.forEach(music => {-->
+<!--          if(musicCount++ < getQuantity.value){-->
+<!--            let tableROW = document.createElement("tr");-->
+
+<!--            tableROW.innerHTML = "<td>" + getID(music.title, music.artist) + "</td>" +-->
+<!--                    "<td>" + music.artist + "</td>" +-->
+<!--                    "<td>" + music.genre + "</td>" +-->
+<!--                    "<td>" + music.releaseYear + "</td>" +-->
+<!--                    "<td><button  onclick='moveUp(this)'>MOVE UP</button><button onclick='moveDown(this)'>MOVE DOWN</button></td>";-->
+
+<!--            placeToAddTable.append(tableROW);-->
+<!--          }-->
+<!--        });-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+
+
+<!--  function getID(title,artist){-->
+<!--    return title.split("").filter(ch => ch ===ch.toUpperCase()).join("") +-->
+<!--            artist.split("").filter(ch => ch ===ch.toUpperCase()).join("")-->
+<!--  }-->
+
+
+<!--  function moveUp(btn) {-->
+<!--    const currentRow = btn.parentNode.parentNode; // Get the parent row of the clicked button-->
+
+<!--    if (currentRow.rowIndex === 0) {-->
+<!--      return;-->
+<!--    }-->
+
+<!--    const previousRow = currentRow.previousElementSibling;-->
+
+
+<!--    placeToAddTable.insertBefore(currentRow, previousRow);-->
+
+
+<!--  }-->
+
+<!--  function moveDown(btn) {-->
+<!--    const currentRow = btn.parentNode.parentNode; // Get the parent row of the clicked button-->
+
+<!--    if (currentRow.rowIndex === placeToAddTable.rows.length - 1) {-->
+<!--      // Already at the bottom, can't move down further-->
+<!--      return;-->
+<!--    }-->
+
+<!--    const nextRow = currentRow.nextElementSibling;-->
+
+<!--    if (!nextRow) {-->
+<!--      // If there's no nextRow, that means this is the last row.-->
+<!--      // We need to move the currentRow to the end of the table.-->
+<!--      placeToAddTable.appendChild(currentRow);-->
+<!--    } else {-->
+<!--      // Swap the rows in the table-->
+<!--      placeToAddTable.insertBefore(nextRow, currentRow);-->
+<!--    }-->
+
+<!--    // If you want to update any data structures or indexes, you can do so here-->
+<!--  }-->
+
+
+
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <style>
+    #num
+    {
+      width: 30px;
+    }
+    body
+    {
+      background: mediumpurple;
+    }
+    td
+    {
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    var data = '[{"artist":"Marc", "title":"TheWorks", "genre":"Pop", "releaseYear":"2022"}, ' +
+                '{"artist":"James", "title":"Jinx", "genre":"Rock", "releaseYear":"2021"},' +
+                '{"artist":"Jayne", "title":"Roll", "genre":"Blues", "releaseYear":"2023"},' +
+                '{"artist":"Alfie", "title":"MegaGiga", "genre":"Pop", "releaseYear":"2019"},' +
+                '{"artist":"Rick", "title":"Extract", "genre":"Rock", "releaseYear":"2028"},' +
+                '{"artist":"William", "title":"Extract", "genre":"Blues", "releaseYear":"2026"}]'
+
+    var parsedData = JSON.parse(data)
+
+    window.onload = (() => {
+      let add = document.getElementById("g")
+
+      var genres = new Set()
+
+      for (i = 0; i < parsedData.length; i++) {
+        genres.add(parsedData[i].genre)
+      }
+
+      genres.forEach(genre => {
+        let option = document.createElement("option")
+        option.innerHTML = genre
+        add.append(option)
+      })
+    })
+
+
+    function mix()
+    {
+      let broj = document.getElementById("num")
+      let finalBroj = parseInt(broj.value)
+      let odbranZhanr = document.getElementById("g").value
+      let tabela = document.getElementById("tuka")
+      tabela.innerHTML = ""
+
+      if(finalBroj>=parsedData.length)
+      {
+        for(i=0;i<parsedData.length;i++)
+        {
+          let red = document.createElement("tr")
+
+          let nasl = parsedData[i].title
+          let art = parsedData[i].artist
+          let zh = parsedData[i].genre
+          let year = parsedData[i].releaseYear
+
+          let id = createID(art,nasl)
+          if(zh===odbranZhanr)
+          {
+            red.innerHTML = "<td>"+id+"</td>" +
+                    "<td>"+art+"</td>" +
+                    "<td>"+nasl+"</td>" +
+                    "<td>"+zh+"</td>" +
+                    "<td>"+year+"</td>" +
+                    "<td><button style='color: red' onclick='up(this)'>UP</button><button style='color: blue' onclick='down(this)'>DOWN</button></td>"
+            red.setAttribute("class","redici")
+          }
+          else if(odbranZhanr==="all")
+          {
+            red.innerHTML = "<td>"+id+"</td>" +
+                    "<td>"+art+"</td>" +
+                    "<td>"+nasl+"</td>" +
+                    "<td>"+zh+"</td>" +
+                    "<td>"+year+"</td>" +
+                    "<td><button style='color: red' onclick='up(this)'>UP</button><button style='color: blue' onclick='down(this)'>DOWN</button></td>"
+            red.setAttribute("class","redici")
+          }
+          tabela.appendChild(red)
+        }
+      }
+      else if(finalBroj<parsedData.length)
+      {
+        for(i=0;i<finalBroj;i++)
+        {
+          let red = document.createElement("tr")
+          let nasl = parsedData[i].title
+          let art = parsedData[i].artist
+          let zh = parsedData[i].genre
+          let year = parsedData[i].releaseYear
+
+          let id = createID(art,nasl)
+          if(zh===odbranZhanr)
+          {
+            red.innerHTML = "<td>"+id+"</td>" +
+                    "<td>"+art+"</td>" +
+                    "<td>"+nasl+"</td>" +
+                    "<td>"+zh+"</td>" +
+                    "<td>"+year+"</td>" +
+                    "<td><button style='color: red' onclick='up(this)'>UP</button><button style='color: blue' onclick='down(this)'>DOWN</button></td>"
+            red.setAttribute("class","redici")
+          }
+          else if(odbranZhanr==="all")
+          {
+            red.innerHTML = "<td>"+id+"</td>" +
+                    "<td>"+art+"</td>" +
+                    "<td>"+nasl+"</td>" +
+                    "<td>"+zh+"</td>" +
+                    "<td>"+year+"</td>" +
+                    "<td><button style='color: red' onclick='up(this)'>UP</button><button style='color: blue' onclick='down(this)'>DOWN</button></td>"
+            red.setAttribute("class","redici")
+          }
+          tabela.appendChild(red)
+        }
+      }
+    }
+
+    function up(btn)
+    {
+      var redici = document.getElementsByClassName("redici")
+      var current = btn.parentNode.parentElement
+
+      for(i=0;i<redici.length;i++)
+      {
+        if(i===0 && redici[i]===current)
+        {
+          break;
+        }
+
+        if(redici[i]===current)
+        {
+          var swap = current.innerHTML
+          current.innerHTML = redici[i-1].innerHTML
+          redici[i-1].innerHTML = swap
+        }
+      }
+    }
+    function down(btn)
+    {
+      var redici = document.getElementsByClassName("redici")
+      var current = btn.parentNode.parentElement
+      for(i=0;i<redici.length;i++)
+      {
+        if(i===5 && redici[i]===current)
+        {
+          break
+        }
+        if(redici[i]===current)
+        {
+          var swap = current.innerHTML
+          current.innerHTML = redici[i+1].innerHTML
+          redici[i+1].innerHTML = swap
+        }
+      }
+
+    }
+
+    function createID(artist,title)
+    {
+      return  title.split("").filter(ch => ch ===ch.toUpperCase()).join("") +
+              artist.split("").filter(ch => ch ===ch.toUpperCase()).join("")
+    }
+
+  </script>
+
+</head>
+<body>
+<label>Get <input type="number" id="num">songs!</label>
+<button onclick="mix()">Mix!</button>
+<select id="g">
+  <option>all</option>
+</select>
+
+<table>
+  <thead>
+  <th>id</th>
+  <th>artist</th>
+  <th>title</th>
+  <th>genre</th>
+  <th>releaseYear</th>
+  <th>move</th>
+  </thead>
+
+  <tbody id="tuka">
+
+  </tbody>
+</table>
+</body>
+</html>
