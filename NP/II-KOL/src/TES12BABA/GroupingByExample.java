@@ -30,7 +30,7 @@ public class GroupingByExample {
                 new Employee("Alice", "HR", 50000),
                 new Employee("Bob", "Finance", 60000),
                 new Employee("Eroll", "Abc", 50000),
-                new Employee("Varikars", "Abc", 60000),
+                new Employee("ZZZZ", "Abc", 60000),
                 new Employee("Charlie", "HR", 55000),
                 new Employee("David", "Finance", 70000)
         );
